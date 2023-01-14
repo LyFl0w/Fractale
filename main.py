@@ -28,7 +28,7 @@ def fractale_matrice(h, w, zoom=1.0, maxit=20, center_x=0, center_y=0, fractal_t
 
 
 position = 0, 0
-native_h, native_w = 800, 800
+native_h, native_w = 600, 600
 h, w = 400, 400
 fps = 5
 zoom = 1
@@ -39,27 +39,39 @@ clock = pygame.time.Clock()
 
 
 def update(center_x, center_y):
-    mb = fractale_matrice(h, w, zoom, center_x=center_x, center_y=center_y)
+    mb = fractale_matrice(h, w, zoom, center_x=center_x, center_y=center_y, fractal_power=10, maxit=100)
+    # Inversion de l'ordre des lignes de l'image de l'ensemble de Mandelbrot pour corriger la différence de coordonnées entre Pygame et NumPy
+    mb = np.flipud(mb)
     mb_surface = pygame.surfarray.make_surface(mb)
     pygame.surfarray.blit_array(mb_surface, mb)
     screen.blit(pygame.transform.scale(mb_surface, (native_w, native_h)), (0, 0))
+    pygame.draw.circle(screen, (255, 0, 0), pygame.mouse.get_pos(), 10)
+    pygame.draw.circle(screen, (255, 0, 0), (native_w / 2, native_h / 2), 10)
     pygame.display.update()
 
 
 def zoom_at_cursor(zoom_factor):
-    global zoom
+    global zoom, position
     mouse_x, mouse_y = pygame.mouse.get_pos()
-    center_x = ((mouse_x / native_w) * 3.8 - 2) / zoom
-    center_y = -((mouse_y / native_h) * 2.8 - 1.4) / zoom
+    rel_x = ((mouse_x / native_w) * 3.8 - 2)
+    rel_y = -((mouse_y / native_h) * 2.8 - 1.4)
+    center_x, center_y = position
     zoom *= zoom_factor
-    update(center_y, center_x)
+    if zoom < 1:
+        zoom = 1
+    elif zoom > 100:
+        zoom = 100
+    center_x += rel_x
+    center_y += rel_y
+    position = center_x, center_y
+    update(center_x, center_y)
 
 
 def move(dx, dy):
     global position
     speed = 0.01
     position = (position[0] + dx * speed, position[1] + dy * speed)
-    update(position[0], position[1])
+    update(position[0], -position[1])
 
 
 def handle_mouse_movement():
