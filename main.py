@@ -2,10 +2,11 @@ import numpy as np
 import pygame
 
 def fractale_matrice(h, w, zoom=1.0, maxit=20, center_x=0, center_y=0, fractal_type='Mandelbrot', fractal_power=2):
-    x, y = np.mgrid[-1.4:1.4:h * 1j, -2:0.8:w * 1j]
-    x = (x - center_x) / zoom
-    y = (y - center_y) / zoom
-    c = x + y * 1j
+    xmin, xmax = center_x - 1/zoom, center_x + 1/zoom
+    ymin, ymax = center_y - 1/zoom, center_y + 1/zoom
+    x, y = np.linspace(xmin, xmax, w), np.linspace(ymin, ymax, h)
+    X, Y = np.meshgrid(x, y)
+    c = X + Y * 1j
     z = c
     diverge = np.zeros((h, w), dtype=bool)
     divtime = np.full((h, w), maxit, dtype=int)
@@ -23,11 +24,11 @@ def fractale_matrice(h, w, zoom=1.0, maxit=20, center_x=0, center_y=0, fractal_t
         divtime[np.logical_and(diverge, divtime == maxit)] = i
         z[diverge] = 2
 
-    return np.fliplr(np.flipud(divtime))
+    return np.rot90(divtime)
 
 
-native_h, native_w = 600, 500
-h, w = 200,200
+native_h, native_w = 500, 500
+h, w = 500,500
 centre=[0,0]
 fps = 50
 zoom = 1
@@ -47,20 +48,16 @@ def update(center_x, center_y):
     pygame.draw.circle(screen, (255, 255, 0), (native_w / 2, native_h / 2), 10)
     pygame.display.update()
 
-def zoom_at_cursor(factor):
+
+def zoom_at_cursor(zoom_factor):
     global zoom, centre
-    cursor_x, cursor_y = pygame.mouse.get_pos()
-    cursor_x_fractale = (cursor_x/native_w)*3.8
-    cursor_y_fractale = (cursor_y/native_h)*2.8
-    centre[0] += (cursor_x_fractale - centre[0]) * (1 - factor)
-    centre[1] += (cursor_y_fractale - centre[1]) * (1 - factor)
-    zoom *= factor
-    update(centre[0], centre[1])
+    zoom*=zoom_factor
+    update(centre[0],centre[1])
 
 def move(dx, dy):
     global centre
-    speed = 1
-    centre = [centre[0] + dx * speed, centre[1] - dy * speed]
+    speed = 1/zoom
+    centre = [centre[0] - dx * speed, centre[1] - dy * speed]
     print("mouvement souris",centre[0],centre[1])
     update(centre[0], centre[1])
 
