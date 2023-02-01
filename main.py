@@ -30,10 +30,10 @@ def fractale_matrice(h, w, zoom=1.0, maxit=20, center_x=0, center_y=0, fractal_t
 
 filtre = pygame.Color(0, 255, 0)
 native_h, native_w = 500, 500
-h, w = 500, 500
+h, w = 400, 400
 centre = [0, 0]
 fps = 50
-zoom = 1
+zoom = 0.7
 
 pygame.init()
 screen = pygame.display.set_mode((native_w, native_h))
@@ -48,8 +48,6 @@ def update(center_x, center_y):
     mb_surface = pygame.surfarray.make_surface(mb)
     pygame.surfarray.blit_array(mb_surface, mb)
     screen.blit(pygame.transform.scale(mb_surface, (native_w, native_h)), (0, 0))
-    pygame.draw.circle(screen, (255, 255, 0), pygame.mouse.get_pos(), 10)
-    pygame.draw.circle(screen, (255, 255, 0), (native_w / 2, native_h / 2), 10)
     screen.fill(filtre, special_flags=7)
     pygame.display.update()
 
@@ -60,17 +58,16 @@ def zoom_at_cursor(zoom_factor):
     update(centre[0], centre[1])
 
 
-def move(dx, dy):
-    global centre
-    speed = 1 / zoom
-    centre = [centre[0] - dx * speed, centre[1] - dy * speed]
-    update(centre[0], centre[1])
-
-
 def handle_mouse_movement():
+    global centre
+
     dx, dy = pygame.mouse.get_rel()
     if pygame.mouse.get_pressed()[0]:
-        move(dx, dy)
+        speed = 1 / zoom
+        centre = [centre[0] - dx * speed, centre[1] - dy * speed]
+        update(centre[0], centre[1])
+        pygame.draw.circle(screen, (255, 255, 0), (native_w / 2, native_h / 2), 10)
+        pygame.display.update()
 
 
 update(centre[0], centre[1])
