@@ -28,7 +28,7 @@ def fractale_matrice(h, w, zoom=1.0, maxit=20, center_x=0, center_y=0, fractal_t
     return np.rot90(divtime)
 
 
-filtre = pygame.Color(0, 255, 0)
+filtre = pygame.Color(0, 255, 255)
 native_h, native_w = 500, 500
 h, w = 400, 400
 centre = [0, 0]
@@ -48,7 +48,7 @@ def update(center_x, center_y):
     mb_surface = pygame.surfarray.make_surface(mb)
     pygame.surfarray.blit_array(mb_surface, mb)
     screen.blit(pygame.transform.scale(mb_surface, (native_w, native_h)), (0, 0))
-    screen.fill(filtre, special_flags=7)
+    screen.fill(filtre, special_flags=8)
     pygame.display.update()
 
 
