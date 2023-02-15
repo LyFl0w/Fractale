@@ -9,7 +9,7 @@ diff=[h/2,w/2]
 fps = 50
 
 
-centre = [-134, 0]
+centre = [h//3, 0]
 zoom = 9
 maxit=6
 
@@ -70,32 +70,34 @@ def infini(center_x,center_y):
     mb = pygame.Surface((w,h))
     pos_cube=position_cube(center_x,center_y,0,0,h/3)
     bloc=position_cube(center_x,center_y,pos_cube[0]*h/3,pos_cube[1]*h/3,h/9)
-    if zoom<=1:
+    if zoom<=2:
         zoom*=3
         maxit=5
-        center_x=h/3*bloc[0]+((pos_cube[0]*h/3+bloc[0]*h/9)-center_x)*3
-        center_y=h/3*bloc[1]+((pos_cube[1]*h/3+bloc[1]*h/9)-center_y)*3
+        center_x=(h/3)*bloc[0]+(center_x-(pos_cube[0]*(h/3)+bloc[0]*(h/9)))*3
+        center_y=(h/3)*bloc[1]+(center_y-(pos_cube[1]*(h/3)+bloc[1]*(h/9)))*3
     elif zoom>=9:
         zoom/=3
         maxit=5
-        center_x=h/3*bloc[0]+((pos_cube[0]*h/3+bloc[0]*h/9)-center_x)*3
-        center_y=h/3*bloc[1]+((pos_cube[1]*h/3+bloc[1]*h/9)-center_y)*3
 
-    print("case",pos_cube)
-    print("bloc",bloc)
+        center_x=(h/3)*bloc[0]+(center_x-(pos_cube[0]*(h/3)+bloc[0]*(h/9)))*3
+        center_y=(h/3)*bloc[1]+(center_y-(pos_cube[1]*(h/3)+bloc[1]*(h/9)))*3
+
+    #print("case",pos_cube)
+    #print("bloc",bloc)
     return [center_x,center_y]
 
 def update(center_x, center_y):
+    global centre
     #screen.fill(0,0,0)
     mb = pygame.Surface((w,h))
-    print("-------------------------")
+    #print("-------------------------")
     centre=infini(center_x,center_y)
-    fractale_matrice(h,w,zoom=zoom,maxit=maxit,x=-center_x,y=center_y,screen=mb)
+    fractale_matrice(h,w,zoom=zoom,maxit=maxit,x=-centre[0],y=centre[1],screen=mb)
     # Inversion de l'ordre des lignes de l'image de l'ensemble de Mandelbrot pour corriger la différence de coordonnées entre Pygame et NumPy
     screen.blit(pygame.transform.scale(mb, (native_w, native_h)), (0, 0))
 
-    print("co",center_x,center_y)
-    print("zoom",zoom)
+    #print("co",centre[0],centre[1])
+    #print("zoom",zoom)
     
     pygame.display.update()
 
