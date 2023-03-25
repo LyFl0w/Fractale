@@ -1,6 +1,6 @@
 import numpy as np
 import pygame
-
+import math
 filtre = pygame.Color(0, 255, 0)
 native_h, native_w = 500, 500
 h, w = 400, 400
@@ -28,16 +28,22 @@ def verifier_presence(centre_screen,h_screen,w_screen,centre_carre,h_carre,w_car
                 return True 
     return False
 
-def fractale_matrice(h_carre, w_carre, zoom=1.0, maxit=maxit, x=0, y=0,screen=screen):
+def fractale_matrice(h_carre, w_carre, zoom=1.0, maxit=maxit, x=0, y=0,screen=screen,distance=False):
     a=0
+    next_distance=False
+    if distance==True:
+        if math.sqrt((x)**2+(y)**2)<=w:
+            distance=False
+            next_distance=True
     if maxit>0:
-        a+=1
-        pygame.draw.rect(screen,(255,255,255),( ((x-(h_carre/3/2))*zoom+diff[0]),((y-(w_carre/3/2))*zoom+diff[1]),int((w_carre/3)*zoom ),int((h_carre/3)*zoom)),0)
-        for i in [-1,0,1]:
-            for j in [-1,0,1]:
-                if (i,j)!=(0,0):
-                    #if verifier_presence((centre[0],centre[1]),dim_screen[1],dim_screen[0],(x+(w_carre/3)*i,y+(h_carre/3)*j),h_carre/3,w_carre/3)==True:
-                    a+=fractale_matrice(h_carre/3,w_carre/3,zoom,maxit-1,x+(w_carre/3)*i,y+(h_carre/3)*j,screen)
+        if distance==False:
+            a+=1
+            pygame.draw.rect(screen,(255,255,255),( ((x-(h_carre/3/2))*zoom+diff[0]),((y-(w_carre/3/2))*zoom+diff[1]),int((w_carre/3)*zoom ),int((h_carre/3)*zoom)),0)
+            for i in [-1,0,1]:
+                for j in [-1,0,1]:
+                    if (i,j)!=(0,0):
+                        #if verifier_presence((centre[0],centre[1]),dim_screen[1],dim_screen[0],(x+(w_carre/3)*i,y+(h_carre/3)*j),h_carre/3,w_carre/3)==True:
+                        a+=fractale_matrice(h_carre/3,w_carre/3,zoom,maxit-1,x+(w_carre/3)*i,y+(h_carre/3)*j,screen,next_distance)
     return a
 
 def zoom_at_cursor(zoom_factor):
@@ -70,17 +76,31 @@ def infini(center_x,center_y):
     mb = pygame.Surface((w,h))
     pos_cube=position_cube(center_x,center_y,0,0,h/3)
     bloc=position_cube(center_x,center_y,pos_cube[0]*h/3,pos_cube[1]*h/3,h/9)
-    if zoom<=2:
+    """if zoom<=2:
         zoom*=3
         maxit=5
         center_x=(h/3)*bloc[0]+(center_x-(pos_cube[0]*(h/3)+bloc[0]*(h/9)))*3
-        center_y=(h/3)*bloc[1]+(center_y-(pos_cube[1]*(h/3)+bloc[1]*(h/9)))*3
-    elif zoom>=9:
+        center_y=(h/3)*bloc[1]+(center_y-(pos_cube[1]*(h/3)+bloc[1]*(h/9)))*3"""
+    if zoom>=9:
         zoom/=3
         maxit=5
-
+        #print("-------------------------")
+        #print("téléportation")
+        #print("--------------------------")
+        #center_x=(h/3)*bloc[0]+(center_x-(pos_cube[0]*(h/3)+bloc[0]*(h/9)))*3
+        #center_y=(h/3)*bloc[1]+(center_y-(pos_cube[1]*(h/3)+bloc[1]*(h/9)))*3
         center_x=(h/3)*bloc[0]+(center_x-(pos_cube[0]*(h/3)+bloc[0]*(h/9)))*3
         center_y=(h/3)*bloc[1]+(center_y-(pos_cube[1]*(h/3)+bloc[1]*(h/9)))*3
+    if abs(center_x) > diff[0]: 
+        if center_x>0:
+            center_x-=w
+        else:
+            center_x+=w
+    if abs(center_y) > diff[1]: 
+        if center_y>0:
+            center_y-=h
+        else:
+            center_y+=h
 
     #print("case",pos_cube)
     #print("bloc",bloc)
@@ -93,6 +113,9 @@ def update(center_x, center_y):
     #print("-------------------------")
     centre=infini(center_x,center_y)
     fractale_matrice(h,w,zoom=zoom,maxit=maxit,x=-centre[0],y=centre[1],screen=mb)
+    for i in range(-1,2):
+        for y in range(-1,2):
+            fractale_matrice(h,w,zoom=zoom,maxit=maxit,x=-centre[0]+i*h,y=centre[1]+y*w,screen=mb,distance=True)
     # Inversion de l'ordre des lignes de l'image de l'ensemble de Mandelbrot pour corriger la différence de coordonnées entre Pygame et NumPy
     screen.blit(pygame.transform.scale(mb, (native_w, native_h)), (0, 0))
 
@@ -109,6 +132,8 @@ def handle_mouse_movement():
 def move(dx, dy):
     global centre
     speed = 1/zoom
+    
+    #if -133<=centre[0] - dx * speed<=133 and -133<=centre[1] + dy * speed<=133:
     centre = [centre[0] - dx * speed, centre[1] + dy * speed]
     update(centre[0], centre[1])
 
