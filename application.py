@@ -9,13 +9,10 @@ class App:
         self.sensitivity = 50
         self.native_size = (600, 600)
         self.fps = 144
-        self.target_fps = 30
-        self.dt = 0
 
         self.filtre = (255, 255, 0)
-        self.fractal_manager = FractalManager(fractal_type=FractalType.MANDELBROT, size=(500, 500), center=(0, 0),
-                                              zoom=0.7,
-                                              iteration=20, fractal_power=2)
+        self.fractal_manager = FractalManager(fractal_type=FractalType.SPONGE_CUBE, size=(500, 500), center=(0, 0),
+                                              zoom=0.7, iteration=20, fractal_power=2)
         self.draw_cursor = False
 
         self.screen = pygame.display.set_mode(self.native_size)
