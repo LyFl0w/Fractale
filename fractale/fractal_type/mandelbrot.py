@@ -1,5 +1,7 @@
 import numpy as np
-from numpy import ndarray
+import pygame
+from pygame.surface import Surface
+
 from fractale.fractal import Fractal
 
 
@@ -9,7 +11,7 @@ class Mandelbrot(Fractal):
         super().__init__(fractal_manager)
         self.fractal_value = None
 
-    def get_array(self) -> ndarray:
+    def get_surface(self) -> Surface:
         diverge = np.zeros((self.fractal_manager.size[1], self.fractal_manager.size[0]), dtype=bool)
         divtime = np.full((self.fractal_manager.size[1], self.fractal_manager.size[0]), self.fractal_manager.iteration,
                           dtype=int)
@@ -29,4 +31,7 @@ class Mandelbrot(Fractal):
             divtime[np.logical_and(diverge, divtime == self.fractal_manager.iteration)] = i
             z[diverge] = 2
 
-        return np.flipud(np.rot90(divtime))
+        fractal_array = np.flipud(np.rot90(divtime))
+        fractal_surface = pygame.surfarray.make_surface(fractal_array)
+        pygame.surfarray.blit_array(fractal_surface, fractal_array)
+        return fractal_surface

@@ -2,7 +2,7 @@
 from abc import abstractmethod, ABC
 from enum import Enum
 
-from numpy import ndarray
+from pygame import Surface
 
 
 class Fractal(ABC):
@@ -10,7 +10,7 @@ class Fractal(ABC):
         self.fractal_manager = fractal_manager
 
     @abstractmethod
-    def get_array(self) -> ndarray:
+    def get_surface(self) -> Surface:
         pass
 
 
