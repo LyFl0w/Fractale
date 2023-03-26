@@ -8,9 +8,12 @@ from fractale.fractal_type.sponge_cube import SpongeCube
 
 class FractalManager:
 
-    def __init__(self, fractal_type: FractalType, size: tuple[int, int], center: tuple[int, int], zoom: float, iteration: int, fractal_power: int):
-        self.size = size # size[0] -> width / size [1] -> height
-        self.center = center # center[0] -> x / center [1] -> y
+    def __init__(self, fractal_type: FractalType, size: list[int, int], center: list[int, int], zoom: float, iteration: int, fractal_power: int):
+        # size[0] -> width / size [1] -> height
+        self.size = size
+        # center[0] -> x / center [1] -> y
+        self.center = center
+
         self.zoom = zoom
         self.iteration = iteration
         self.fractal_power = fractal_power
