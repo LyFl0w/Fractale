@@ -1,4 +1,3 @@
-import time
 import pygame
 from fractale.fractal import FractalType
 from fractale.fractal_manger import FractalManager
@@ -6,13 +5,13 @@ from fractale.fractal_manger import FractalManager
 
 class App:
     def __init__(self):
-        self.sensitivity = 50
+        self.sensitivity = 20
         self.native_size = (600, 600)
         self.fps = 144
 
         self.filtre = (255, 255, 0)
-        self.fractal_manager = FractalManager(fractal_type=FractalType.SPONGE_CUBE, size=[500, 500], center=[0, 0],
-                                              zoom=0.7, iteration=5, fractal_power=2)
+        self.fractal_manager = FractalManager(fractal_type=FractalType.JULIA, size=[500, 500], center=[0, 0],
+                                              zoom=0.7, iteration=30, fractal_power=2)
         self.draw_cursor = False
 
         self.screen = pygame.display.set_mode(self.native_size)
@@ -31,7 +30,7 @@ class App:
         dx, dy = pygame.mouse.get_rel()
         if pygame.mouse.get_pressed()[0]:
             self.draw_cursor = True
-            speed = (0.001 * self.sensitivity / self.fractal_manager.zoom)
+            speed = (0.001 * self.fractal_manager.fractal_type.value[1] * self.sensitivity / self.fractal_manager.zoom)
             self.fractal_manager.center = [
             self.fractal_manager.center[0] - dx * speed, self.fractal_manager.center[1] - dy * speed]
             self.fractal_manager.draw(self.screen, self.native_size, self.filtre)
@@ -67,6 +66,5 @@ class App:
                 pygame.display.update()
 
             self.clock.tick(self.fps)
-            print(self.fractal_manager.center, type(self.fractal_manager.center))
 
         pygame.quit()

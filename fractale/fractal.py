@@ -15,6 +15,6 @@ class Fractal(ABC):
 
 
 class FractalType(Enum):
-    MANDELBROT = "Mandelbrot"
-    JULIA = "Julia"
-    SPONGE_CUBE = "Sponge Cube"
+    MANDELBROT = "Mandelbrot", 1
+    JULIA = "Julia", 1
+    SPONGE_CUBE = "Sponge Cube", 5
