@@ -11,7 +11,7 @@ class App:
         self.fps = 144
 
         self.filtre = (255, 255, 0)
-        self.fractal_manager = FractalManager(fractal_type=FractalType.SPONGE_CUBE, size=[500, 500], center=[0, 0],
+        self.fractal_manager = FractalManager(fractal_type=FractalType.SIERPINSKY, size=[500, 500], center=[0, 0],
                                               zoom=0.7, iteration=5, fractal_power=2)
         self.draw_cursor = False
 
