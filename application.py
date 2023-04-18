@@ -7,12 +7,12 @@ from fractale.fractal_manger import FractalManager
 class App:
     def __init__(self):
         self.sensitivity = 50
-        self.native_size = (600, 600)
+        self.native_size = (800, 800)
         self.fps = 144
 
-        self.filtre = (255, 255, 0)
-        self.fractal_manager = FractalManager(fractal_type=FractalType.SIERPINSKY, size=[500, 500], center=[0, 0],
-                                              zoom=0.7, iteration=5, fractal_power=2)
+        self.filtre = (255, 255, 255)
+        self.fractal_manager = FractalManager(fractal_type=FractalType.SIERPINSKY, size=[800, 800], center=[0, 0],
+                                              zoom=0.5, iteration=6, fractal_power=2)
         self.draw_cursor = False
 
         self.screen = pygame.display.set_mode(self.native_size)
@@ -32,8 +32,7 @@ class App:
         if pygame.mouse.get_pressed()[0]:
             self.draw_cursor = True
             speed = (0.001 * self.sensitivity / self.fractal_manager.zoom)
-            self.fractal_manager.center = [
-            self.fractal_manager.center[0] - dx * speed, self.fractal_manager.center[1] - dy * speed]
+            self.fractal_manager.center = [self.fractal_manager.center[0] - dx * speed, self.fractal_manager.center[1] - dy * speed]
             self.fractal_manager.draw(self.screen, self.native_size, self.filtre)
             pygame.draw.circle(self.screen, self.filtre[::-1], (self.native_size[0] / 2, self.native_size[1] / 2), 10)
             pygame.display.update()
@@ -67,6 +66,5 @@ class App:
                 pygame.display.update()
 
             self.clock.tick(self.fps)
-            print(self.fractal_manager.center, type(self.fractal_manager.center))
 
         pygame.quit()
