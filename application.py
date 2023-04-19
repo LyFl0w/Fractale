@@ -37,8 +37,7 @@ class App:
 
         if pygame.mouse.get_pressed()[0]:
             speed = (0.002 * self.fractal_manager.fractal_type.value[1] / self.fractal_manager.zoom)
-            self.fractal_manager.center = [
-                self.fractal_manager.center[0] - dx * speed, self.fractal_manager.center[1] - dy * speed]
+            self.fractal_manager.center = [self.fractal_manager.center[0] - dx * speed, self.fractal_manager.center[1] - dy * speed * (-1 if self.fractal_manager.fractal_type == FractalType.SIERPINSKY else 1)]
             self.fractal_manager.draw(self.screen, screen_settings.native_size)
 
             if screen_settings.display_cursor:
