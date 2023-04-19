@@ -15,7 +15,7 @@ class App:
 
         from settings.settings import screen_settings
 
-        self.screen = pygame.display.set_mode(screen_settings.native_size)
+        self.screen = pygame.display.set_mode(screen_settings.get_native_size())
         self.clock = pygame.time.Clock()
 
         self.running = False
@@ -29,7 +29,7 @@ class App:
         if self.draw_cursor:
             pygame.draw.circle(self.screen,
                                screen_settings.filter[::-1] if screen_settings.display_filter else (255, 255, 255),
-                               (screen_settings.native_size[0] / 2, screen_settings.native_size[1] / 2), 10)
+                               (screen_settings.get_native_size()[0] / 2, screen_settings.get_native_size()[1] / 2), 10)
 
         pygame.display.update()
 
@@ -49,7 +49,7 @@ class App:
                 self.draw_cursor = True
                 pygame.draw.circle(self.screen,
                                    screen_settings.filter[::-1] if screen_settings.display_filter else (255, 255, 255),
-                                   (screen_settings.native_size[0] / 2, screen_settings.native_size[1] / 2), 10)
+                                   (screen_settings.get_native_size()[0] / 2, screen_settings.get_native_size()[1] / 2), 10)
 
             pygame.display.update()
 
@@ -83,6 +83,6 @@ class App:
                 self.fractal_manager.draw(self.screen)
                 pygame.display.update()
 
-            self.clock.tick(screen_settings.fps)
+            print(self.clock.tick(screen_settings.fps))
 
         pygame.quit()

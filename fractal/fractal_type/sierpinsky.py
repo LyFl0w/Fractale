@@ -12,7 +12,7 @@ class Sierpinsky(Fractal):
         super().__init__(fractal_manager)
         self.fractal_value = None
         self.diff = [screen_settings.get_generation_size()[1] / 2, screen_settings.get_generation_size()[0] / 2]
-        self.triangle = pygame.Surface(fractal_manager.size, pygame.SRCALPHA)
+        self.triangle = pygame.Surface(screen_settings.get_generation_size(), pygame.SRCALPHA)
         pygame.draw.polygon(self.triangle, (255, 255, 255),
                             ([0, 0],
                              [screen_settings.get_generation_size()[0] // 2, screen_settings.get_generation_size()[1]],
