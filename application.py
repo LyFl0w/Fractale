@@ -9,8 +9,7 @@ class App:
     def __init__(self):
         ScreenSettings()
 
-        self.fractal_manager = FractalManager(fractal_type=FractalType.MANDELBROT, size=[800, 800], center=[0, 0],
-                                              zoom=0.5, iteration=25, fractal_power=2)
+        self.fractal_manager = FractalManager(fractal_type=FractalType.SIERPINSKY, zoom=0.5)
 
         from settings.settings import screen_settings
 

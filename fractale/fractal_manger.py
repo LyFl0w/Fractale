@@ -8,16 +8,17 @@ from fractale.fractal_type.sponge_cube import SpongeCube
 
 class FractalManager:
 
-    def __init__(self, fractal_type: FractalType, size: list[int, int], center: list[int, int], zoom: float,
-                 iteration: int, fractal_power: int):
+    def __init__(self, fractal_type: FractalType, zoom: float):
+        from settings.settings import screen_settings
+
         # size[0] -> width / size [1] -> height
-        self.size = size
+        self.size = screen_settings.generation_size
         # center[0] -> x / center [1] -> y
-        self.center = center
+        self.center = [0, 0]
 
         self.zoom = zoom
-        self.iteration = iteration
-        self.fractal_power = fractal_power
+        self.iteration = screen_settings.iteration
+        self.fractal_power = screen_settings.fractal_power
 
         self.fractal = None
         self.fractal_type = fractal_type
