@@ -15,7 +15,14 @@ class Fractal(ABC):
 
 
 class FractalType(Enum):
-    MANDELBROT = "Mandelbrot", 1
-    JULIA = "Julia", 1
-    SPONGE_CUBE = "Sponge Cube", 5
-    SIERPINSKY = "Triangle de Sierpiński", 5
+
+    # 1. Str name
+    # 2. Default Sensibility Power
+    # 3. iteration min
+    # 4. iteration max
+
+    MANDELBROT = "Mandelbrot", 1, 6, 200
+    JULIA = "Julia", 1, 6, 200
+    SPONGE_CUBE = "Sponge Cube", 150, 5, 5
+    SIERPINSKY = "Triangle de Sierpiński", 150, 3, 8
+
