@@ -8,7 +8,7 @@ class App:
     def __init__(self):
         self.sensitivity = 50
         self.native_size = (800, 800)
-        self.fps = 144
+        self.fps = 60
 
         self.filtre = (255, 255, 255)
         self.fractal_manager = FractalManager(fractal_type=FractalType.SIERPINSKY, size=[800, 800], center=[0, 0],
