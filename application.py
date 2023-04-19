@@ -5,7 +5,6 @@ from fractale.fractal_manger import FractalManager
 
 class App:
     def __init__(self):
-        self.sensitivity = 50
         self.native_size = (800, 800)
         self.fps = 60
 
@@ -30,7 +29,7 @@ class App:
         dx, dy = pygame.mouse.get_rel()
         if pygame.mouse.get_pressed()[0]:
             self.draw_cursor = True
-            speed = (0.001 * self.fractal_manager.fractal_type.value[1] * self.sensitivity / self.fractal_manager.zoom)
+            speed = (0.001 * self.fractal_manager.fractal_type.value[1] * 50 / self.fractal_manager.zoom)
             self.fractal_manager.center = [
             self.fractal_manager.center[0] - dx * speed, self.fractal_manager.center[1] - dy * speed]
             self.fractal_manager.draw(self.screen, self.native_size, self.filtre)
