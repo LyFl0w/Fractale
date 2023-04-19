@@ -1,4 +1,3 @@
-import time
 import pygame
 from fractale.fractal import FractalType
 from fractale.fractal_manger import FractalManager
@@ -31,8 +30,9 @@ class App:
         dx, dy = pygame.mouse.get_rel()
         if pygame.mouse.get_pressed()[0]:
             self.draw_cursor = True
-            speed = (0.001 * self.sensitivity / self.fractal_manager.zoom)
-            self.fractal_manager.center = [self.fractal_manager.center[0] - dx * speed, self.fractal_manager.center[1] - dy * speed]
+            speed = (0.001 * self.fractal_manager.fractal_type.value[1] * self.sensitivity / self.fractal_manager.zoom)
+            self.fractal_manager.center = [
+            self.fractal_manager.center[0] - dx * speed, self.fractal_manager.center[1] - dy * speed]
             self.fractal_manager.draw(self.screen, self.native_size, self.filtre)
             pygame.draw.circle(self.screen, self.filtre[::-1], (self.native_size[0] / 2, self.native_size[1] / 2), 10)
             pygame.display.update()

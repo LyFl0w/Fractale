@@ -20,6 +20,7 @@ class FractalManager:
         self.fractal_power = fractal_power
 
         self.fractal = None
+        self.fractal_type = fractal_type
         self.update_fractal_type(fractal_type)
 
     def update_fractal_type(self, fractal_type):
