@@ -1,14 +1,15 @@
 import pygame
-
 from fractale.fractal import FractalType
 from fractale.fractal_type.julia import Julia
 from fractale.fractal_type.mandelbrot import Mandelbrot
+from fractale.fractal_type.sierpinsky import Sierpinsky
 from fractale.fractal_type.sponge_cube import SpongeCube
 
 
 class FractalManager:
 
-    def __init__(self, fractal_type: FractalType, size: list[int, int], center: list[int, int], zoom: float, iteration: int, fractal_power: int):
+    def __init__(self, fractal_type: FractalType, size: list[int, int], center: list[int, int], zoom: float,
+                 iteration: int, fractal_power: int):
         # size[0] -> width / size [1] -> height
         self.size = size
         # center[0] -> x / center [1] -> y
@@ -29,6 +30,8 @@ class FractalManager:
             self.fractal = Julia(self)
         elif fractal_type == FractalType.SPONGE_CUBE:
             self.fractal = SpongeCube(self)
+        elif fractal_type == FractalType.SIERPINSKY:
+            self.fractal = Sierpinsky(self)
 
     def draw(self, screen, native_size: tuple[int, int], color_filter=None):
         fractal_surface = self.fractal.get_surface()

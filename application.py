@@ -5,13 +5,13 @@ from fractale.fractal_manger import FractalManager
 
 class App:
     def __init__(self):
-        self.sensitivity = 20
-        self.native_size = (600, 600)
-        self.fps = 144
+        self.sensitivity = 50
+        self.native_size = (800, 800)
+        self.fps = 60
 
-        self.filtre = (255, 255, 0)
-        self.fractal_manager = FractalManager(fractal_type=FractalType.JULIA, size=[500, 500], center=[0, 0],
-                                              zoom=0.7, iteration=30, fractal_power=2)
+        self.filtre = (255, 255, 255)
+        self.fractal_manager = FractalManager(fractal_type=FractalType.SIERPINSKY, size=[800, 800], center=[0, 0],
+                                              zoom=0.5, iteration=6, fractal_power=2)
         self.draw_cursor = False
 
         self.screen = pygame.display.set_mode(self.native_size)

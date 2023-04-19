@@ -32,7 +32,7 @@ class SpongeCube(Fractal):
         pos_cube = self.position_cube(0, 0, self.fractal_manager.size[1] / 3)
         bloc = self.position_cube(pos_cube[0] * self.fractal_manager.size[1] / 3,
                                   pos_cube[1] * self.fractal_manager.size[1] / 3, self.fractal_manager.size[1] / 9)
-
+                                  
         if self.fractal_manager.zoom >= 9:
             self.fractal_manager.zoom /= 3
             self.fractal_manager.center[0] = (self.fractal_manager.size[1] / 3) * bloc[0] + (
@@ -86,6 +86,7 @@ class SpongeCube(Fractal):
                 self.fractale_matrice(zoom=self.fractal_manager.zoom, screen=mb, h_carre=self.fractal_manager.size[1],
                                       w_carre=self.fractal_manager.size[0], maxit=self.fractal_manager.iteration,
                                       x=-self.fractal_manager.center[0] + i * self.fractal_manager.size[1],
-                                      y=self.fractal_manager.center[1] + y * self.fractal_manager.size[0], distance=True)
+                                      y=self.fractal_manager.center[1] + y * self.fractal_manager.size[0],
+                                      distance=True)
 
         return pygame.transform.flip(mb, False, True)
