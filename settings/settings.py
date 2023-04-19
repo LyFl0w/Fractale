@@ -4,6 +4,7 @@ from shutil import copy2 as copy
 from utils.path import DATA_SETTINGS_PATH
 
 screen_settings = None
+fractal_settings = None
 
 
 class Settings:
@@ -20,21 +21,21 @@ class Settings:
     def __create_file(self, reset_option=False):
         from utils import json_utils
 
-        def copy_default_player_settings():
-            default_player_settings_path = self.__get_path(True)
+        def copy_default_settings():
+            default_settings_path = self.__get_path(True)
 
             # Create DefaultSettings.json if not exist by the base of default variable in the Settings class
-            if not exists(default_player_settings_path):
-                json_utils.writeJson(vars(self), default_player_settings_path, ["_Settings__type_settings"])
+            if not exists(default_settings_path):
+                json_utils.writeJson(vars(self), default_settings_path, ["_Settings__type_settings"])
 
             # Copy DefaultSettings.json inside Settings.json
-            copy(default_player_settings_path, settings_path)
+            copy(default_settings_path, settings_path)
 
         settings_path = self.__get_path()
 
         if not exists(settings_path) or reset_option:
             # Create Settings.json if not exist by the base of DefaultSettings.json
-            copy_default_player_settings()
+            copy_default_settings()
 
         self.__dict__.update(json_utils.readJson(settings_path))
 
