@@ -15,8 +15,9 @@ class Sierpinsky(Fractal):
         self.triangle = pygame.Surface(screen_settings.get_generation_size(), pygame.SRCALPHA)
         pygame.draw.polygon(self.triangle, (255, 255, 255),
                             ([0, 0],
-                             [screen_settings.get_generation_size()[0] // 2, screen_settings.get_generation_size()[1]],
+                             [screen_settings.get_generation_size()[1] // 2, screen_settings.get_generation_size()[0]],
                              [screen_settings.get_generation_size()[1], 0]), 0)
+
         self.fractal_manager.center = [0, -400]
 
     def fractale_matrice_triangle(self, screen, zoom=1.0, maxit=1, taille=1.0, x=0.0, y=0.0, distance=False):
@@ -51,7 +52,7 @@ class Sierpinsky(Fractal):
         x = (point_haut[0] + point_gauche[0]) / 2
         y = (point_haut[1] + point_gauche[1]) / 2
 
-        self.fractale_matrice_triangle(mb, zoom=self.fractal_manager.zoom, maxit=fractal_settings.iteration,
+        self.fractale_matrice_triangle(mb, zoom=self.fractal_manager.zoom, maxit=2,
                                        taille=taille, x=x, y=y)
 
         return pygame.transform.flip(mb, True, False)

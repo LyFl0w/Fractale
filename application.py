@@ -1,5 +1,9 @@
+import sys
+import threading
+
 import pygame
 
+import interface
 from fractal.fractal import FractalType
 from fractal.fractal_manger import FractalManager
 from settings.fractal_settings import FractalSettings
@@ -20,6 +24,9 @@ class App:
 
         self.running = False
         self.draw_cursor = False
+
+        self.thread_tkinter = None  # Thread pour la fenêtre Tkinter
+        print("init app")
 
     def zoom_at_cursor(self, zoom_factor):
         from settings.settings import screen_settings
@@ -42,7 +49,7 @@ class App:
             speed = (0.002 * self.fractal_manager.get_fractal_type().value[1] / self.fractal_manager.zoom)
             self.fractal_manager.center = [self.fractal_manager.center[0] - dx * speed,
                                            self.fractal_manager.center[1] - dy * speed *
-                                           (-1 if fractal_settings.fractal_type in [FractalType.SIERPINSKY] else 1)]
+                                           (1 if fractal_settings.fractal_type in [FractalType.SIERPINSKY] else 1)]
             self.fractal_manager.draw(self.screen)
 
             if screen_settings.display_cursor:
@@ -76,6 +83,12 @@ class App:
                         self.zoom_at_cursor(0.9)
                 if event.type == pygame.MOUSEMOTION:
                     self.handle_mouse_movement()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:
+                        if not self.thread_tkinter or not self.thread_tkinter.is_alive():
+                            # Démarrer le thread Tkinter uniquement s'il n'est pas déjà en cours d'exécution
+                            self.thread_tkinter = threading.Thread(target=interface.run)
+                            self.thread_tkinter.start()
 
             # remove cursor
             if not pygame.mouse.get_pressed()[0] and self.draw_cursor:
@@ -83,6 +96,9 @@ class App:
                 self.fractal_manager.draw(self.screen)
                 pygame.display.update()
 
-            print(self.clock.tick(screen_settings.fps))
+            self.clock.tick(screen_settings.fps)
+
+        if interface.root is not None:
+            interface.kill_thread()
 
         pygame.quit()
