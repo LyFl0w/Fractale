@@ -2,7 +2,7 @@ import numpy as np
 import pygame
 from pygame.surface import Surface
 
-from fractale.fractal import Fractal
+from fractal.fractal import Fractal
 
 
 class Mandelbrot(Fractal):
@@ -12,23 +12,24 @@ class Mandelbrot(Fractal):
         self.fractal_value = None
 
     def get_surface(self) -> Surface:
-        diverge = np.zeros((self.fractal_manager.size[1], self.fractal_manager.size[0]), dtype=bool)
-        divtime = np.full((self.fractal_manager.size[1], self.fractal_manager.size[0]), self.fractal_manager.iteration,
+        from settings.settings import screen_settings, fractal_settings
+        diverge = np.zeros((screen_settings.get_generation_size()[1], screen_settings.get_generation_size()[0]), dtype=bool)
+        divtime = np.full((screen_settings.get_generation_size()[1], screen_settings.get_generation_size()[0]), fractal_settings.iteration,
                           dtype=int)
 
         xmin, xmax = self.fractal_manager.center[0] - 1 / self.fractal_manager.zoom, self.fractal_manager.center[
             0] + 1 / self.fractal_manager.zoom
         ymin, ymax = self.fractal_manager.center[1] - 1 / self.fractal_manager.zoom, self.fractal_manager.center[
             1] + 1 / self.fractal_manager.zoom
-        X, Y = np.meshgrid(np.linspace(xmin, xmax, self.fractal_manager.size[0]),
-                           np.linspace(ymin, ymax, self.fractal_manager.size[1]))
+        X, Y = np.meshgrid(np.linspace(xmin, xmax, screen_settings.get_generation_size()[0]),
+                           np.linspace(ymin, ymax, screen_settings.get_generation_size()[1]))
         z = X + Y * 1j
         fractal = z if self.fractal_value is None else self.fractal_value
 
-        for i in range(self.fractal_manager.iteration):
-            z = z ** self.fractal_manager.fractal_power + fractal
+        for i in range(fractal_settings.iteration):
+            z = z ** fractal_settings.fractal_power + fractal
             diverge = np.logical_or(diverge, z * np.conj(z) > 2 ** 2)
-            divtime[np.logical_and(diverge, divtime == self.fractal_manager.iteration)] = i
+            divtime[np.logical_and(diverge, divtime == fractal_settings.iteration)] = i
             z[diverge] = 2
 
         fractal_array = np.flipud(np.rot90(divtime))

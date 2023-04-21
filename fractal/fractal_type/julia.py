@@ -1,4 +1,4 @@
-from fractale.fractal_type.mandelbrot import Mandelbrot
+from fractal.fractal_type.mandelbrot import Mandelbrot
 
 
 class Julia(Mandelbrot):
