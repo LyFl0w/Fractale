@@ -1,5 +1,4 @@
 import pygame
-
 from application import App
 
 if __name__ == "__main__":
