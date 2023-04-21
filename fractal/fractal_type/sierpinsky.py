@@ -32,7 +32,7 @@ class Sierpinsky(Fractal):
                                            distance)
 
     def get_surface(self) -> Surface:
-        from settings.settings import screen_settings, fractal_settings
+        from settings.settings import screen_settings
 
         mb = pygame.Surface(screen_settings.get_generation_size())
         mb.fill((0, 0, 0))

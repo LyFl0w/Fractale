@@ -7,11 +7,12 @@ from settings.settings import Settings
 class ScreenSettings(Settings):
 
     def __init__(self):
-        self.__native_size = (1280, 720)
+        self.__native_size = (800, 800)
         self.__generation_size_optimization = 0.9
         self.__generation_size = (int(self.__native_size[0] * self.__generation_size_optimization),
                                   int(self.__native_size[1] * self.__generation_size_optimization))
 
+        self.sensibility = 5
         self.filter = (255, 255, 255)
         self.fps = 60
 
@@ -36,6 +37,7 @@ class ScreenSettings(Settings):
         self.__generation_size_optimization = generation_size_optimization
         self.__generation_size = (int(self.__native_size[0] * self.__generation_size_optimization),
                                   int(self.__native_size[1] * self.__generation_size_optimization))
+        self.save()
 
     def get_generation_size(self) -> tuple[int, int]:
         return self.__generation_size

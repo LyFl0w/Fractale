@@ -20,22 +20,28 @@ class FractalManager:
 
         self.__fractal = None
         self.__fractal_type = fractal.fractal.get_fractal_by_name(fractal_settings.fractal_type)
-        self.set_fractal_type(self.__fractal_type)
+        self.__update_fractal()
 
-    def set_fractal_type(self, fractal_type: FractalType):
+    def __update_fractal(self):
         self.center = [0, 0]
-        self.__fractal_type = fractal_type
-        if fractal_type == FractalType.MANDELBROT:
+
+        if self.__fractal_type == FractalType.MANDELBROT:
             self.__fractal = Mandelbrot(self)
-        elif fractal_type == FractalType.JULIA:
+        elif self.__fractal_type == FractalType.JULIA:
             self.__fractal = Julia(self)
-        elif fractal_type == FractalType.SPONGE_CUBE:
+        elif self.__fractal_type == FractalType.SPONGE_CUBE:
             self.__fractal = SpongeCube(self)
-        elif fractal_type == FractalType.SIERPINSKY:
+        elif self.__fractal_type == FractalType.SIERPINSKY:
             self.__fractal = Sierpinsky(self)
 
     def get_fractal_type(self):
         return self.__fractal_type
+
+    def update_fractal_type(self):
+        from settings.settings import fractal_settings
+
+        self.__fractal_type = fractal.fractal.get_fractal_by_name(fractal_settings.fractal_type)
+        self.__update_fractal()
 
     def draw(self, screen):
         from settings.settings import screen_settings
