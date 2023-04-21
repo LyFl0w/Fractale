@@ -1,5 +1,6 @@
 import os
 import queue
+from os.path import exists
 
 import pygame.display
 
@@ -32,8 +33,11 @@ class QueueUpdate:
                 pygame.display.update()
 
             elif key == "screenshot":
-                files = next(os.walk(path.DATA_SCREENSHOT_PATH))[2]
-                pygame.image.save(self.app.screen, path.DATA_SCREENSHOT_PATH+"/screeshot_"+str(len(files))+".jpg")
+                screenshot_path = path.DATA_SCREENSHOT_PATH
+                if not exists(screenshot_path):
+                    os.mkdir(screenshot_path)
+                files = next(os.walk(screenshot_path))[2]
+                pygame.image.save(self.app.screen, os.path.join(screenshot_path, "screeshot_"+str(len(files))+".jpg"))
 
     def put(self, key, value):
         self.__queue.put((key, value))

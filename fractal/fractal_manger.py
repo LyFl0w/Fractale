@@ -16,6 +16,7 @@ class FractalManager:
         # center[0] -> x / center [1] -> y
         self.center = [0, 0]
 
+        self.default_zoom = zoom
         self.zoom = zoom
 
         self.__fractal = None
@@ -24,6 +25,7 @@ class FractalManager:
 
     def __update_fractal(self):
         self.center = [0, 0]
+        self.zoom = self.default_zoom
 
         if self.__fractal_type == FractalType.MANDELBROT:
             self.__fractal = Mandelbrot(self)
