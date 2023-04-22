@@ -2,17 +2,17 @@ import numpy as np
 import pygame
 from pygame.surface import Surface
 
-from fractal.fractal import Fractal
+from program.fractal.fractalbase import FractalBase
 
 
-class Mandelbrot(Fractal):
+class Mandelbrot(FractalBase):
 
     def __init__(self, fractal_manager):
         super().__init__(fractal_manager)
         self.fractal_value = None
 
     def get_surface(self) -> Surface:
-        from settings.settings import screen_settings, fractal_settings
+        from program.settings.settingsbase import screen_settings, fractal_settings
         diverge = np.zeros((screen_settings.get_generation_size()[1], screen_settings.get_generation_size()[0]), dtype=bool)
         divtime = np.full((screen_settings.get_generation_size()[1], screen_settings.get_generation_size()[0]), fractal_settings.iteration,
                           dtype=int)

@@ -1,42 +1,42 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, colorchooser
 
-from fractal import fractal
+from program.fractal import fractalbase
 
 root = None
 app = None
 
 
 def screen_size_selected_event(event):
-    from settings.settings import screen_settings
+    from program.settings.settingsbase import screen_settings
 
     screen_size = list(map(int, event.widget.get().split("x")))
     if screen_settings.get_native_size() != screen_size:
         screen_settings.set_native_size(screen_size)
-        app.add_element_to_queue("screen_size", None)
+        app.add_element_to_queue("screen_size")
 
 
 def downsampling_selected_event(event):
-    from settings.settings import screen_settings
+    from program.settings.settingsbase import screen_settings
 
     downsampling_value = event.widget.get() / 100
     if screen_settings.get_generation_size_optimization() != downsampling_value:
         screen_settings.set_generation_size_optimization(downsampling_value)
-        app.add_element_to_queue("downsampling", None)
+        app.add_element_to_queue("update_fractal")
 
 
 def fractal_selected_event(event):
-    from settings.settings import fractal_settings
+    from program.settings.settingsbase import fractal_settings
 
-    fractal_selected = fractal.get_fractal_type_by_real_name(event.widget.get())
+    fractal_selected = fractalbase.get_fractal_type_by_real_name(event.widget.get())
     if fractal_selected.name != fractal_settings.fractal_type:
         fractal_settings.fractal_type = fractal_selected.name
         fractal_settings.save()
-        app.add_element_to_queue("fractal", None)
+        app.add_element_to_queue("fractal")
 
 
 def sensibility_selected_event(event):
-    from settings.settings import screen_settings
+    from program.settings.settingsbase import screen_settings
 
     sensibility_value = event.widget.get()
     if screen_settings.sensibility != sensibility_value:
@@ -44,8 +44,23 @@ def sensibility_selected_event(event):
         screen_settings.save()
 
 
+def filter_color_selected_event():
+    from program.settings.settingsbase import screen_settings
+
+    color = colorchooser.askcolor(title="Choisissez une couleur", color=tuple(screen_settings.filter))
+
+    if not color[1]:
+        return
+
+    rgb_color_value = color[0]
+    if screen_settings.filter != rgb_color_value:
+        screen_settings.filter = rgb_color_value
+        screen_settings.save()
+        app.add_element_to_queue("update_fractal")
+
+
 def screenshot():
-    app.add_element_to_queue("screenshot", None)
+    app.add_element_to_queue("screenshot")
 
 
 def kill_thread():
@@ -56,27 +71,47 @@ def kill_thread():
 
 
 def run(app_):
-    from settings.settings import screen_settings, fractal_settings
+    from program.settings.settingsbase import screen_settings, fractal_settings
+
+    global root, app
+    app = app_
 
     def update_parameters_value():
         screen_size_var.set('x'.join(map(str, screen_settings.get_native_size())))
         slider_generation_optimization.set(screen_settings.get_generation_size_optimization() * 100)
-        variable_var.set(fractal.get_fractal_by_name(fractal_settings.fractal_type).real_name)
+        variable_var.set(fractalbase.get_fractal_by_name(fractal_settings.fractal_type).real_name)
         slider_sensibility.set(screen_settings.sensibility)
+        filter_status_button.config(text="Désactiver" if screen_settings.display_filter else "Activer")
+        cursor_status_button.config(text="Désactiver le curseur" if screen_settings.display_cursor else "Activer le curseur")
 
     def reset_settings():
         screen_settings.reset_settings()
+        fractal_settings.reset_settings()
 
         # Update Interface
         update_parameters_value()
 
         # Update PyGame
-        app.add_element_to_queue("fractal", None)
-        app.add_element_to_queue("downsampling", None)
-        app.add_element_to_queue("screen_size", None)
+        app.add_element_to_queue("screen_size")
+        app.add_element_to_queue("fractal")
 
-    global root, app
-    app = app_
+    def display_filter_event():
+        filter_status = not screen_settings.display_filter
+        screen_settings.display_filter = filter_status
+        screen_settings.save()
+
+        app.add_element_to_queue("update_fractal")
+
+        filter_status_button.config(text="Désactiver" if filter_status else "Activer")
+
+    def display_cursor_event():
+        cursor_status = not screen_settings.display_cursor
+        screen_settings.display_cursor = cursor_status
+        screen_settings.save()
+
+        app.add_element_to_queue("update_fractal")
+
+        cursor_status_button.config(text="Désactiver le curseur" if cursor_status else "Activer le curseur")
 
     # Création de la fenêtre
     root = tk.Tk()
@@ -144,7 +179,7 @@ def run(app_):
     label.pack()
 
     # Liste déroulante pour choisir la variable d'énumération
-    variable_options = [fractals.real_name for fractals in fractal.FractalType]
+    variable_options = [fractals.real_name for fractals in fractalbase.FractalType]
     variable_var = tk.StringVar()
     variable_combobox = ttk.Combobox(fractal_frame, textvariable=variable_var, values=variable_options,
                                      state='readonly')
@@ -182,6 +217,23 @@ def run(app_):
     # Bouton pour capturer un screenshot
     screenshot_button = ttk.Button(utilities_frame, text="Capture d'écran", command=screenshot)
     screenshot_button.pack(pady=10, ipadx=5)
+
+    filter_frame = ttk.LabelFrame(utilities_frame, text="Filtre")
+
+    # Bouton pour la couleur du filtre
+
+    filter_button = ttk.Button(filter_frame, text="Couleur", command=filter_color_selected_event)
+    filter_button.pack(side=tk.LEFT, padx=10, ipadx=5)
+
+    # Bouton pour activer/désactiver le filtre
+    filter_status_button = ttk.Button(filter_frame, command=display_filter_event)
+    filter_status_button.pack(side=tk.LEFT, padx=10, ipadx=5)
+
+    filter_frame.pack(pady=10, ipady=10)
+
+    # Bouton pour activer/désactiver le curseur
+    cursor_status_button = ttk.Button(utilities_frame, command=display_cursor_event)
+    cursor_status_button.pack(padx=10, ipadx=5, pady=10)
 
     # Définition des poids des colonnes pour qu'elles s'adaptent à la fenêtre
     root.grid_columnconfigure(0, weight=1)

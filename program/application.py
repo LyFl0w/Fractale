@@ -1,13 +1,13 @@
-from utils import queue_update
+from program import interface
+from program.fractal.fractalbase import FractalType
+from program.utils import queue_update
 import threading
 
 import pygame
 
-import interface
-from fractal.fractal import FractalType
-from fractal.fractal_manger import FractalManager
-from settings.fractal_settings import FractalSettings
-from settings.screen_settings import ScreenSettings
+from program.fractal.fractal_manger import FractalManager
+from program.settings.fractal_settings import FractalSettings
+from program.settings.screen_settings import ScreenSettings
 
 
 class App:
@@ -15,7 +15,7 @@ class App:
         ScreenSettings()
         FractalSettings()
 
-        from settings.settings import screen_settings
+        from program.settings.settingsbase import screen_settings
 
         self.screen = pygame.display.set_mode(screen_settings.get_native_size())
         self.clock = pygame.time.Clock()
@@ -28,7 +28,7 @@ class App:
         self.fractal_manager = FractalManager(zoom=0.5)
 
     def zoom_at_cursor(self, zoom_factor):
-        from settings.settings import screen_settings
+        from program.settings.settingsbase import screen_settings
 
         self.fractal_manager.zoom *= zoom_factor
         self.draw_fractal()
@@ -40,7 +40,7 @@ class App:
         pygame.display.update()
 
     def handle_mouse_movement(self):
-        from settings.settings import screen_settings, fractal_settings
+        from program.settings.settingsbase import screen_settings, fractal_settings
 
         dx, dy = pygame.mouse.get_rel()
 
@@ -61,7 +61,7 @@ class App:
             pygame.display.update()
 
     def run(self):
-        from settings.settings import screen_settings
+        from program.settings.settingsbase import screen_settings
 
         if self.running:
             raise Exception("The application is already launched")
@@ -103,8 +103,8 @@ class App:
 
         pygame.quit()
 
-    def add_element_to_queue(self, key, value):
-        self.__queue_update.put(key, value)
+    def add_element_to_queue(self, key):
+        self.__queue_update.put(key)
 
     def draw_fractal(self):
         self.fractal_manager.draw(self.screen)
