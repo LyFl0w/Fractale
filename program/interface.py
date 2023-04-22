@@ -86,9 +86,9 @@ def run(app_):
     app = app_
 
     def update_position_entries():
-        entry_x.config(textvariable=tk.DoubleVar(value=round(app.fractal_manager.center[0], 3)))
-        entry_y.config(textvariable=tk.DoubleVar(value=round(app.fractal_manager.center[1], 3)))
-        entry_z.config(textvariable=tk.DoubleVar(value=round(app.fractal_manager.zoom, 3)))
+        entry_x.config(textvariable=tk.DoubleVar(value=app.fractal_manager.center[0]))
+        entry_y.config(textvariable=tk.DoubleVar(value=app.fractal_manager.center[1]))
+        entry_z.config(textvariable=tk.DoubleVar(value=app.fractal_manager.zoom))
 
     def update_parameters_value():
         screen_size_var.set('x'.join(map(str, screen_settings.get_native_size())))
