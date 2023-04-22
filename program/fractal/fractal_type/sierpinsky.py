@@ -1,13 +1,13 @@
 import pygame
 from pygame import Surface
 
-from fractal.fractal import Fractal
+from program.fractal.fractalbase import FractalBase
 
 
-class Sierpinsky(Fractal):
+class Sierpinsky(FractalBase):
 
     def __init__(self, fractal_manager):
-        from settings.settings import screen_settings
+        from program.settings.settingsbase import screen_settings
 
         super().__init__(fractal_manager)
         self.fractal_value = None
@@ -32,7 +32,7 @@ class Sierpinsky(Fractal):
                                            distance)
 
     def get_surface(self) -> Surface:
-        from settings.settings import screen_settings
+        from program.settings.settingsbase import screen_settings
 
         mb = pygame.Surface(screen_settings.get_generation_size())
         mb.fill((0, 0, 0))

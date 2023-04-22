@@ -4,7 +4,7 @@ from os.path import exists
 
 import pygame.display
 
-from utils import path
+from program.utils import path
 
 
 class QueueUpdate:
@@ -15,29 +15,30 @@ class QueueUpdate:
 
     def execute(self):
         if not self.__queue.empty():
-            key, value = self.__queue.get()
+            key = self.__queue.get()
 
             if key == "screen_size":
-                from settings.settings import screen_settings
+                from program.settings.settingsbase import screen_settings
                 self.app.screen = pygame.display.set_mode(screen_settings.get_native_size())
-                self.app.draw_fractal()
-                pygame.display.update()
-
-            elif key == "downsampling":
-                self.app.draw_fractal()
-                pygame.display.update()
+                self.__update_fractal()
 
             elif key == "fractal":
                 self.app.fractal_manager.update_fractal_type()
-                self.app.draw_fractal()
-                pygame.display.update()
+                self.__update_fractal()
+
+            elif key == "update_fractal":
+                self.__update_fractal()
 
             elif key == "screenshot":
-                screenshot_path = path.DATA_SCREENSHOT_PATH
+                screenshot_path = path.SCREENSHOT_PATH
                 if not exists(screenshot_path):
                     os.mkdir(screenshot_path)
                 files = next(os.walk(screenshot_path))[2]
                 pygame.image.save(self.app.screen, os.path.join(screenshot_path, "screeshot_"+str(len(files))+".jpg"))
 
-    def put(self, key, value):
-        self.__queue.put((key, value))
+    def __update_fractal(self):
+        self.app.draw_fractal()
+        pygame.display.update()
+
+    def put(self, key):
+        self.__queue.put(key)
