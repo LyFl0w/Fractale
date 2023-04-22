@@ -1,6 +1,8 @@
 import json
-from utils.path import *
+import os
 from pathlib import Path
+
+from program.utils.path import SETTINGS_PATH
 
 
 def writeJson(obj, path: str, remove_variable=()):
@@ -19,7 +21,7 @@ def writeJson(obj, path: str, remove_variable=()):
     # Serializing json
     json_object = json.dumps(obj)
 
-    path = Path(os.path.join(DATA_PATH, path))
+    path = Path(os.path.join(SETTINGS_PATH, path))
 
     path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -30,7 +32,7 @@ def writeJson(obj, path: str, remove_variable=()):
 
 def readJson(json_file_path: str) -> dict:
     # Read JSON file
-    data_str = open(os.path.join(DATA_PATH, json_file_path))
+    data_str = open(os.path.join(SETTINGS_PATH, json_file_path))
     data = json.loads(data_str.read())
     data_str.close()
 

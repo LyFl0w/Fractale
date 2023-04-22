@@ -5,7 +5,7 @@ from enum import Enum
 from pygame import Surface
 
 
-class Fractal(ABC):
+class FractalBase(ABC):
     def __init__(self, fractal_manager):
         self.fractal_manager = fractal_manager
 

@@ -1,7 +1,5 @@
-from typing import List
-
-from settings import settings
-from settings.settings import Settings
+from program.settings import settingsbase
+from program.settings.settingsbase import Settings
 
 
 class ScreenSettings(Settings):
@@ -13,7 +11,7 @@ class ScreenSettings(Settings):
                                   int(self.__native_size[1] * self.__generation_size_optimization))
 
         self.sensibility = 5
-        self.filter = (255, 255, 255)
+        self.filter = (255, 255, 150)
         self.fps = 60
 
         self.display_cursor = True
@@ -21,7 +19,7 @@ class ScreenSettings(Settings):
 
         super().__init__("screen")
 
-        settings.screen_settings = self
+        settingsbase.screen_settings = self
 
     def get_native_size(self):
         return self.__native_size

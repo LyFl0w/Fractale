@@ -3,13 +3,13 @@ import math
 import pygame
 from pygame.surface import Surface
 
-from fractal.fractal import Fractal
+from program.fractal.fractalbase import FractalBase
 
 
-class SpongeCube(Fractal):
+class SpongeCube(FractalBase):
 
     def __init__(self, fractal_manager):
-        from settings.settings import screen_settings
+        from program.settings.settingsbase import screen_settings
 
         super().__init__(fractal_manager)
         self.fractal_value = None
@@ -31,7 +31,7 @@ class SpongeCube(Fractal):
         return [x, y]
 
     def infini(self):
-        from settings.settings import screen_settings
+        from program.settings.settingsbase import screen_settings
 
         pos_cube = self.position_cube(0, 0, screen_settings.get_generation_size()[1] / 3)
         bloc = self.position_cube(pos_cube[0] * screen_settings.get_generation_size()[1] / 3,
@@ -59,7 +59,7 @@ class SpongeCube(Fractal):
         return [self.fractal_manager.center[0], self.fractal_manager.center[1]]
 
     def fractale_matrice(self, zoom, screen, h_carre, w_carre, maxit, x=0, y=0, distance=False):
-        from settings.settings import screen_settings
+        from program.settings.settingsbase import screen_settings
 
         a = 0
         next_distance = False
@@ -81,7 +81,7 @@ class SpongeCube(Fractal):
         return a
 
     def get_surface(self) -> Surface:
-        from settings.settings import screen_settings, fractal_settings
+        from program.settings.settingsbase import screen_settings, fractal_settings
 
         mb = pygame.Surface(screen_settings.get_generation_size())
         self.fractal_manager.center = self.infini()
