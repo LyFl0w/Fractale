@@ -104,10 +104,10 @@ class App:
                     pygame.display.update()
             else:
                 if interface.entry_x is not None:
-                    interface.entry_x.config(textvariable=tk.DoubleVar(value=round(self.fractal_manager.center[0], 3)))
+                    interface.entry_x.config(textvariable=tk.DoubleVar(value=self.fractal_manager.center[0]))
 
                 if interface.entry_y is not None:
-                    interface.entry_y.config(textvariable=tk.DoubleVar(value=round(self.fractal_manager.center[1], 3)))
+                    interface.entry_y.config(textvariable=tk.DoubleVar(value=self.fractal_manager.center[1]))
 
             self.clock.tick(screen_settings.fps)
 

@@ -32,7 +32,7 @@ class Sierpinsky(FractalBase):
                                            distance)
 
     def get_surface(self) -> Surface:
-        from program.settings.settingsbase import screen_settings
+        from program.settings.settingsbase import screen_settings, fractal_settings
 
         mb = pygame.Surface(screen_settings.get_generation_size())
         mb.fill((0, 0, 0))
@@ -52,7 +52,7 @@ class Sierpinsky(FractalBase):
         x = (point_haut[0] + point_gauche[0]) / 2
         y = (point_haut[1] + point_gauche[1]) / 2
 
-        self.fractale_matrice_triangle(mb, zoom=self.fractal_manager.zoom, maxit=2,
+        self.fractale_matrice_triangle(mb, zoom=self.fractal_manager.zoom, maxit=fractal_settings.iteration,
                                        taille=taille, x=x, y=y)
 
         return pygame.transform.flip(mb, True, False)
