@@ -6,6 +6,8 @@ from program.fractal import fractalbase
 root = None
 app = None
 
+entry_x, entry_y, entry_z = None, None, None
+
 
 def screen_size_selected_event(event):
     from program.settings.settingsbase import screen_settings
@@ -63,6 +65,12 @@ def screenshot():
     app.add_element_to_queue("screenshot")
 
 
+def teleport_position_event():
+    app.fractal_manager.center = [float(entry_x.get()), float(entry_y.get())]
+    app.fractal_manager.zoom = float(entry_z.get())
+    app.add_element_to_queue("update_fractal")
+
+
 def kill_thread():
     global root
     if root is not None:
@@ -73,7 +81,7 @@ def kill_thread():
 def run(app_):
     from program.settings.settingsbase import screen_settings, fractal_settings
 
-    global root, app
+    global root, app, entry_x, entry_y, entry_z
     app = app_
 
     def update_parameters_value():
@@ -82,7 +90,8 @@ def run(app_):
         variable_var.set(fractalbase.get_fractal_by_name(fractal_settings.fractal_type).real_name)
         slider_sensibility.set(screen_settings.sensibility)
         filter_status_button.config(text="Désactiver" if screen_settings.display_filter else "Activer")
-        cursor_status_button.config(text="Désactiver le curseur" if screen_settings.display_cursor else "Activer le curseur")
+        cursor_status_button.config(
+            text="Désactiver le curseur" if screen_settings.display_cursor else "Activer le curseur")
 
     def reset_settings():
         screen_settings.reset_settings()
@@ -112,6 +121,19 @@ def run(app_):
         app.add_element_to_queue("update_fractal")
 
         cursor_status_button.config(text="Désactiver le curseur" if cursor_status else "Activer le curseur")
+
+    def validate_float(msg, value):
+        if value.count(".") > 1:
+            return False
+
+        if (msg == "-" and value[0] != "-") or value.count("-") > 1:
+            return False
+
+        check = " .-0123456789"
+        for char in msg:
+            if char not in check:
+                return False
+        return True
 
     # Création de la fenêtre
     root = tk.Tk()
@@ -235,6 +257,45 @@ def run(app_):
     cursor_status_button = ttk.Button(utilities_frame, command=display_cursor_event)
     cursor_status_button.pack(padx=10, ipadx=5, pady=10)
 
+    # Cadre droit pour les coordonnées
+    position_frame = ttk.LabelFrame(utilities_frame, text="Position")
+
+    position_selection_frame = ttk.Frame(position_frame)
+
+    # Fonction de validation enregistrée pour les zones de saisie
+    float_validation = position_selection_frame.register(validate_float)
+
+    # Zone de saisie pour x
+    label_x = tk.Label(position_selection_frame, text="Coordonnée x :")
+    label_x.grid(row=0, column=0, sticky=tk.W, padx=5)
+    entry_x = tk.Entry(position_selection_frame, validate="key",
+                       textvariable=tk.DoubleVar(value=round(app.fractal_manager.center[0], 3)),
+                       validatecommand=(float_validation, "%S", "%P"))
+    entry_x.grid(row=0, column=1, sticky=tk.W, pady=2)
+
+    # Zone de saisie pour y
+    label_y = tk.Label(position_selection_frame, text="Coordonnée y :")
+    label_y.grid(row=1, column=0, sticky=tk.W, padx=5)
+    entry_y = tk.Entry(position_selection_frame, validate="key",
+                       textvariable=tk.DoubleVar(value=round(app.fractal_manager.center[1], 3)),
+                       validatecommand=(float_validation, "%S", "%P"))
+    entry_y.grid(row=1, column=1, sticky=tk.W, pady=2)
+
+    # Zone de saisie pour z
+    label_z = tk.Label(position_selection_frame, text="Coordonnée z :")
+    label_z.grid(row=2, column=0, sticky=tk.W, padx=5)
+    entry_z = tk.Entry(position_selection_frame, validate="key",
+                       textvariable=tk.DoubleVar(value=round(app.fractal_manager.zoom, 3)),
+                       validatecommand=(float_validation, "%S", "%P"))
+    entry_z.grid(row=2, column=1, sticky=tk.W, pady=2)
+
+    position_selection_frame.pack()
+
+    go_position_button = tk.Button(position_frame, text="Go", padx=10, command=teleport_position_event)
+    go_position_button.pack(pady=5)
+
+    position_frame.pack()
+
     # Définition des poids des colonnes pour qu'elles s'adaptent à la fenêtre
     root.grid_columnconfigure(0, weight=1)
     root.grid_columnconfigure(1, weight=1)
@@ -245,3 +306,4 @@ def run(app_):
     root.mainloop()
 
     root = None
+    entry_x, entry_y, entry_z = None, None, None
