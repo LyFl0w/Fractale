@@ -1,13 +1,13 @@
 from program import interface
 from program.fractal.fractalbase import FractalType
 from program.utils import queue_update
-import threading
-
-import pygame
-
 from program.fractal.fractal_manger import FractalManager
 from program.settings.fractal_settings import FractalSettings
 from program.settings.screen_settings import ScreenSettings
+
+import threading
+import pygame
+import tkinter as tk
 
 
 class App:
@@ -37,6 +37,9 @@ class App:
                                screen_settings.filter[::-1] if screen_settings.display_filter else (255, 255, 255),
                                (screen_settings.get_native_size()[0] / 2, screen_settings.get_native_size()[1] / 2), 10)
 
+        if interface.entry_z is not None:
+            interface.entry_z.config(textvariable=tk.DoubleVar(value=round(self.fractal_manager.zoom, 3)))
+
         pygame.display.update()
 
     def handle_mouse_movement(self):
@@ -45,7 +48,9 @@ class App:
         dx, dy = pygame.mouse.get_rel()
 
         if pygame.mouse.get_pressed()[0]:
-            speed = ((0.002 * self.fractal_manager.get_fractal_type().default_sensibility * screen_settings.sensibility) / (self.fractal_manager.zoom * 5))
+            speed = ((
+                                 0.002 * self.fractal_manager.get_fractal_type().default_sensibility * screen_settings.sensibility) / (
+                                 self.fractal_manager.zoom * 5))
             self.fractal_manager.center = [self.fractal_manager.center[0] - dx * speed,
                                            self.fractal_manager.center[1] - dy * speed *
                                            (1 if fractal_settings.fractal_type in [FractalType.SIERPINSKY] else 1)]
@@ -91,10 +96,18 @@ class App:
                             threading.Thread(target=interface.run, args=(self,)).start()
 
             # remove cursor
-            if not pygame.mouse.get_pressed()[0] and self.draw_cursor:
-                self.draw_cursor = False
-                self.draw_fractal()
-                pygame.display.update()
+            if not pygame.mouse.get_pressed()[0]:
+
+                if self.draw_cursor:
+                    self.draw_cursor = False
+                    self.draw_fractal()
+                    pygame.display.update()
+            else:
+                if interface.entry_x is not None:
+                    interface.entry_x.config(textvariable=tk.DoubleVar(value=round(self.fractal_manager.center[0], 3)))
+
+                if interface.entry_y is not None:
+                    interface.entry_y.config(textvariable=tk.DoubleVar(value=round(self.fractal_manager.center[1], 3)))
 
             self.clock.tick(screen_settings.fps)
 
