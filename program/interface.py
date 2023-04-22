@@ -1,3 +1,4 @@
+import time
 import tkinter as tk
 from tkinter import ttk, colorchooser
 
@@ -84,6 +85,11 @@ def run(app_):
     global root, app, entry_x, entry_y, entry_z
     app = app_
 
+    def update_position_entries():
+        entry_x.config(textvariable=tk.DoubleVar(value=round(app.fractal_manager.center[0], 3)))
+        entry_y.config(textvariable=tk.DoubleVar(value=round(app.fractal_manager.center[1], 3)))
+        entry_z.config(textvariable=tk.DoubleVar(value=round(app.fractal_manager.zoom, 3)))
+
     def update_parameters_value():
         screen_size_var.set('x'.join(map(str, screen_settings.get_native_size())))
         slider_generation_optimization.set(screen_settings.get_generation_size_optimization() * 100)
@@ -103,6 +109,10 @@ def run(app_):
         # Update PyGame
         app.add_element_to_queue("screen_size")
         app.add_element_to_queue("fractal")
+
+        time.sleep(1)
+
+        update_position_entries()
 
     def display_filter_event():
         filter_status = not screen_settings.display_filter
@@ -269,7 +279,6 @@ def run(app_):
     label_x = tk.Label(position_selection_frame, text="Coordonnée x :")
     label_x.grid(row=0, column=0, sticky=tk.W, padx=5)
     entry_x = tk.Entry(position_selection_frame, validate="key",
-                       textvariable=tk.DoubleVar(value=round(app.fractal_manager.center[0], 3)),
                        validatecommand=(float_validation, "%S", "%P"))
     entry_x.grid(row=0, column=1, sticky=tk.W, pady=2)
 
@@ -277,7 +286,6 @@ def run(app_):
     label_y = tk.Label(position_selection_frame, text="Coordonnée y :")
     label_y.grid(row=1, column=0, sticky=tk.W, padx=5)
     entry_y = tk.Entry(position_selection_frame, validate="key",
-                       textvariable=tk.DoubleVar(value=round(app.fractal_manager.center[1], 3)),
                        validatecommand=(float_validation, "%S", "%P"))
     entry_y.grid(row=1, column=1, sticky=tk.W, pady=2)
 
@@ -285,9 +293,10 @@ def run(app_):
     label_z = tk.Label(position_selection_frame, text="Coordonnée z :")
     label_z.grid(row=2, column=0, sticky=tk.W, padx=5)
     entry_z = tk.Entry(position_selection_frame, validate="key",
-                       textvariable=tk.DoubleVar(value=round(app.fractal_manager.zoom, 3)),
                        validatecommand=(float_validation, "%S", "%P"))
     entry_z.grid(row=2, column=1, sticky=tk.W, pady=2)
+
+    update_position_entries()
 
     position_selection_frame.pack()
 
@@ -301,6 +310,7 @@ def run(app_):
     root.grid_columnconfigure(1, weight=1)
 
     update_parameters_value()
+
 
     # Lancement de la boucle principale
     root.mainloop()
