@@ -1,5 +1,6 @@
 import pygame
 
+from program import interface
 from program.fractal import fractalbase
 from program.fractal.fractalbase import FractalType
 from program.fractal.fractal_type.mandelbrot import Mandelbrot
@@ -24,8 +25,13 @@ class FractalManager:
         self.__update_fractal()
 
     def __update_fractal(self):
+        from program.settings.settingsbase import fractal_settings
+
         self.center = [0, 0]
         self.zoom = self.default_zoom
+
+        fractal_settings.iteration = min(fractal_settings.iteration, self.__fractal_type.iteration_max)
+        interface.update_iteration(self.__fractal_type)
 
         if self.__fractal_type == FractalType.MANDELBROT:
             self.__fractal = Mandelbrot(self)
