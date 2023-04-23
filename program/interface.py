@@ -89,6 +89,15 @@ def update_iteration(fractal_type):
     slider_iteration.config(from_=fractal_type.iteration_min, to=fractal_type.iteration_max)
 
 
+def update_fractal_power(event):
+    from program.settings.settingsbase import fractal_settings
+
+    fractal_settings.fractal_power = event.widget.get()
+    fractal_settings.save()
+
+    app.add_element_to_queue("update_fractal")
+
+
 def kill_thread():
     global root
     if root is not None:
@@ -119,6 +128,7 @@ def run(app_):
 
         fractal_type = fractalbase.get_fractal_by_name(fractal_settings.fractal_type)
         slider_iteration.config(from_=fractal_type.iteration_min, to=fractal_type.iteration_max)
+        fractal_power_slider.set(fractal_settings.fractal_power)
 
     def reset_settings():
         screen_settings.reset_settings()
@@ -267,9 +277,13 @@ def run(app_):
 
     fractal_options_frame.pack(ipady=10)
 
+    # Cadre pour le slider de sensibilité et fractal power
+
+    sensibility_fractal_power_frame = ttk.Frame(options_frame)
+
     # Cadre pour le slider de sensibilité
 
-    sensibility_frame = ttk.Frame(options_frame)
+    sensibility_frame = ttk.Frame(sensibility_fractal_power_frame)
 
     # Titre
     label = tk.Label(sensibility_frame, text="Sensibilité")
@@ -283,7 +297,27 @@ def run(app_):
     slider_sensibility.bind("<ButtonRelease-3>", sensibility_selected_event)
     slider_sensibility.bind("<ButtonRelease-1>", sensibility_selected_event)
 
-    sensibility_frame.pack(ipady=10)
+    sensibility_frame.grid(row=0, column=0, sticky=tk.W, padx=5)
+
+    # Cadre pour le slider de fractal power
+
+    fractal_power_frame = ttk.Frame(sensibility_fractal_power_frame)
+
+    # Titre
+    label = tk.Label(fractal_power_frame, text="Puissance de la Fractale")
+    label.pack()
+
+    # Slider
+    fractal_power_slider = tk.Scale(fractal_power_frame, from_=2, to=50, resolution=1, orient=tk.HORIZONTAL, length=150)
+    fractal_power_slider.pack()
+
+    # Ajout d'un gestionnaire d'événement pour détecter le relâchement du curseur du slider
+    fractal_power_slider.bind("<ButtonRelease-3>", update_fractal_power)
+    fractal_power_slider.bind("<ButtonRelease-1>", update_fractal_power)
+
+    fractal_power_frame.grid(row=0, column=1, sticky=tk.W, padx=5)
+
+    sensibility_fractal_power_frame.pack()
 
     # Bouton pour réinitialiser les paramètres
     reset_button = ttk.Button(options_frame, text="Réinitialisation des Paramètres", command=reset_settings)
