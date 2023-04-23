@@ -8,6 +8,7 @@ root = None
 app = None
 
 entry_x, entry_y, entry_z = None, None, None
+slider_iteration = None
 
 
 def screen_size_selected_event(event):
@@ -66,9 +67,34 @@ def screenshot():
     app.add_element_to_queue("screenshot")
 
 
+def iteration_selected_event(event):
+    from program.settings.settingsbase import fractal_settings
+    fractal_settings.iteration = event.widget.get()
+    app.add_element_to_queue("update_fractal")
+
+
 def teleport_position_event():
     app.fractal_manager.center = [float(entry_x.get()), float(entry_y.get())]
     app.fractal_manager.zoom = float(entry_z.get())
+    app.add_element_to_queue("update_fractal")
+
+
+def update_iteration(fractal_type):
+    from program.settings.settingsbase import fractal_settings
+
+    if slider_iteration is None:
+        return
+
+    slider_iteration.set(fractal_settings.iteration)
+    slider_iteration.config(from_=fractal_type.iteration_min, to=fractal_type.iteration_max)
+
+
+def update_fractal_power(event):
+    from program.settings.settingsbase import fractal_settings
+
+    fractal_settings.fractal_power = event.widget.get()
+    fractal_settings.save()
+
     app.add_element_to_queue("update_fractal")
 
 
@@ -82,7 +108,7 @@ def kill_thread():
 def run(app_):
     from program.settings.settingsbase import screen_settings, fractal_settings
 
-    global root, app, entry_x, entry_y, entry_z
+    global root, app, entry_x, entry_y, entry_z, slider_iteration
     app = app_
 
     def update_position_entries():
@@ -98,6 +124,11 @@ def run(app_):
         filter_status_button.config(text="Désactiver" if screen_settings.display_filter else "Activer")
         cursor_status_button.config(
             text="Désactiver le curseur" if screen_settings.display_cursor else "Activer le curseur")
+        slider_iteration.set(fractal_settings.iteration)
+
+        fractal_type = fractalbase.get_fractal_by_name(fractal_settings.fractal_type)
+        slider_iteration.config(from_=fractal_type.iteration_min, to=fractal_type.iteration_max)
+        fractal_power_slider.set(fractal_settings.fractal_power)
 
     def reset_settings():
         screen_settings.reset_settings()
@@ -156,11 +187,13 @@ def run(app_):
     options_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
     # Cadre pour les paramètres de la taille de fenetre
-    fenetre_frame = ttk.Frame(options_frame)
+    options_fenetre_frame = ttk.Frame(options_frame)
+
+    fenetre_frame = ttk.Frame(options_fenetre_frame)
 
     # Titre
     label = tk.Label(fenetre_frame, text="Taille de fenêtre")
-    label.pack()
+    label.pack(ipady=8)
 
     # Liste déroulante pour choisir la taille de la fenêtre
     screen_size_options = [
@@ -179,13 +212,13 @@ def run(app_):
     screen_size_combobox = ttk.Combobox(fenetre_frame, textvariable=screen_size_var, values=screen_size_options,
                                         state='readonly')
     screen_size_combobox.bind("<<ComboboxSelected>>", screen_size_selected_event)
-    screen_size_combobox.pack()
+    screen_size_combobox.pack(pady=10)
 
-    fenetre_frame.pack(ipady=10)
+    fenetre_frame.grid(row=0, column=0, sticky=tk.W, padx=5)
 
     # Cadre pour le slider d'optimsation de rendu
 
-    downsampling_frame = ttk.Frame(options_frame)
+    downsampling_frame = ttk.Frame(options_fenetre_frame)
 
     # Titre
     label = tk.Label(downsampling_frame, text="Détail Graphique")
@@ -200,15 +233,19 @@ def run(app_):
     slider_generation_optimization.bind("<ButtonRelease-3>", downsampling_selected_event)
     slider_generation_optimization.bind("<ButtonRelease-1>", downsampling_selected_event)
 
-    downsampling_frame.pack(ipady=10)
+    downsampling_frame.grid(row=0, column=1, sticky=tk.W, padx=5)
+
+    options_fenetre_frame.pack(ipady=10)
+
+    fractal_options_frame = ttk.Frame(options_frame)
 
     # Cadre pour le type de fractal
 
-    fractal_frame = ttk.Frame(options_frame)
+    fractal_frame = ttk.Frame(fractal_options_frame)
 
     # Titre
     label = tk.Label(fractal_frame, text="Fractale")
-    label.pack()
+    label.pack(ipady=8)
 
     # Liste déroulante pour choisir la variable d'énumération
     variable_options = [fractals.real_name for fractals in fractalbase.FractalType]
@@ -216,13 +253,37 @@ def run(app_):
     variable_combobox = ttk.Combobox(fractal_frame, textvariable=variable_var, values=variable_options,
                                      state='readonly')
     variable_combobox.bind("<<ComboboxSelected>>", fractal_selected_event)
-    variable_combobox.pack()
+    variable_combobox.pack(pady=10)
 
-    fractal_frame.pack(ipady=10)
+    fractal_frame.grid(row=0, column=0, sticky=tk.W, padx=5)
+
+    # Cadre pour le slider d'iteration
+
+    iteration_frame = ttk.Frame(fractal_options_frame)
+
+    # Titre
+    label = tk.Label(iteration_frame, text="Iteration")
+    label.pack()
+
+    # Slider
+    slider_iteration = tk.Scale(iteration_frame, resolution=1, orient=tk.HORIZONTAL, length=150)
+    slider_iteration.pack()
+
+    # Ajout d'un gestionnaire d'événement pour détecter le relâchement du curseur du slider
+    slider_iteration.bind("<ButtonRelease-3>", iteration_selected_event)
+    slider_iteration.bind("<ButtonRelease-1>", iteration_selected_event)
+
+    iteration_frame.grid(row=0, column=1, sticky=tk.W, padx=5)
+
+    fractal_options_frame.pack(ipady=10)
+
+    # Cadre pour le slider de sensibilité et fractal power
+
+    sensibility_fractal_power_frame = ttk.Frame(options_frame)
 
     # Cadre pour le slider de sensibilité
 
-    sensibility_frame = ttk.Frame(options_frame)
+    sensibility_frame = ttk.Frame(sensibility_fractal_power_frame)
 
     # Titre
     label = tk.Label(sensibility_frame, text="Sensibilité")
@@ -236,7 +297,27 @@ def run(app_):
     slider_sensibility.bind("<ButtonRelease-3>", sensibility_selected_event)
     slider_sensibility.bind("<ButtonRelease-1>", sensibility_selected_event)
 
-    sensibility_frame.pack(ipady=10)
+    sensibility_frame.grid(row=0, column=0, sticky=tk.W, padx=5)
+
+    # Cadre pour le slider de fractal power
+
+    fractal_power_frame = ttk.Frame(sensibility_fractal_power_frame)
+
+    # Titre
+    label = tk.Label(fractal_power_frame, text="Puissance de la Fractale")
+    label.pack()
+
+    # Slider
+    fractal_power_slider = tk.Scale(fractal_power_frame, from_=2, to=50, resolution=1, orient=tk.HORIZONTAL, length=150)
+    fractal_power_slider.pack()
+
+    # Ajout d'un gestionnaire d'événement pour détecter le relâchement du curseur du slider
+    fractal_power_slider.bind("<ButtonRelease-3>", update_fractal_power)
+    fractal_power_slider.bind("<ButtonRelease-1>", update_fractal_power)
+
+    fractal_power_frame.grid(row=0, column=1, sticky=tk.W, padx=5)
+
+    sensibility_fractal_power_frame.pack()
 
     # Bouton pour réinitialiser les paramètres
     reset_button = ttk.Button(options_frame, text="Réinitialisation des Paramètres", command=reset_settings)
@@ -311,9 +392,9 @@ def run(app_):
 
     update_parameters_value()
 
-
     # Lancement de la boucle principale
     root.mainloop()
 
     root = None
     entry_x, entry_y, entry_z = None, None, None
+    slider_iteration = None
