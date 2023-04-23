@@ -363,3 +363,4 @@ def run(app_):
 
     root = None
     entry_x, entry_y, entry_z = None, None, None
+    slider_iteration = None
