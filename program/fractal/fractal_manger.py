@@ -30,7 +30,7 @@ class FractalManager:
         self.center = [0, 0]
         self.zoom = self.default_zoom
 
-        fractal_settings.iteration = min(fractal_settings.iteration, self.__fractal_type.iteration_max)
+        fractal_settings.iteration = max(min(fractal_settings.iteration, self.__fractal_type.iteration_max), self.__fractal_type.iteration_min)
         interface.update_iteration(self.__fractal_type)
 
         if self.__fractal_type == FractalType.MANDELBROT:
