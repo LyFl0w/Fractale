@@ -69,8 +69,24 @@ def screenshot():
 
 def iteration_selected_event(event):
     from program.settings.settingsbase import fractal_settings
-    fractal_settings.iteration = event.widget.get()
-    app.add_element_to_queue("update_fractal")
+
+    new_iteration = event.widget.get()
+
+    if new_iteration != fractal_settings.iteration:
+        fractal_settings.iteration = event.widget.get()
+        app.add_element_to_queue("update_fractal")
+
+
+def update_fractal_power(event):
+    from program.settings.settingsbase import fractal_settings
+
+    new_fractal_power = event.widget.get()
+
+    if new_fractal_power != fractal_settings.fractal_power:
+        fractal_settings.fractal_power = new_fractal_power
+        fractal_settings.save()
+
+        app.add_element_to_queue("update_fractal")
 
 
 def teleport_position_event():
@@ -87,15 +103,6 @@ def update_iteration(fractal_type):
 
     slider_iteration.set(fractal_settings.iteration)
     slider_iteration.config(from_=fractal_type.iteration_min, to=fractal_type.iteration_max)
-
-
-def update_fractal_power(event):
-    from program.settings.settingsbase import fractal_settings
-
-    fractal_settings.fractal_power = event.widget.get()
-    fractal_settings.save()
-
-    app.add_element_to_queue("update_fractal")
 
 
 def kill_thread():
