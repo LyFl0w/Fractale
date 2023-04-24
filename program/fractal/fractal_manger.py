@@ -5,7 +5,7 @@ from program.fractal import fractalbase
 from program.fractal.fractalbase import FractalType
 from program.fractal.fractal_type.mandelbrot import Mandelbrot
 from program.fractal.fractal_type.julia import Julia
-from program.fractal.fractal_type.sierpinsky import Sierpinsky
+from program.fractal.fractal_type.sierpinski import Sierpinski
 from program.fractal.fractal_type.sponge_cube import SpongeCube
 
 
@@ -39,8 +39,8 @@ class FractalManager:
             self.__fractal = Julia(self)
         elif self.__fractal_type == FractalType.SPONGE_CUBE:
             self.__fractal = SpongeCube(self)
-        elif self.__fractal_type == FractalType.SIERPINSKY:
-            self.__fractal = Sierpinsky(self)
+        elif self.__fractal_type == FractalType.SIERPINSKI:
+            self.__fractal = Sierpinski(self)
 
     def get_fractal_type(self):
         return self.__fractal_type

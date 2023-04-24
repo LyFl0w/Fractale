@@ -18,7 +18,7 @@ class FractalType(Enum):
     MANDELBROT = ("Mandelbrot", 1, 6, 170)
     JULIA = ("Julia", 1, 6, 170)
     SPONGE_CUBE = ("Sponge Cube", 150, 4, 5)
-    SIERPINSKY = ("Triangle de Sierpiński", 150, 3, 8)
+    SIERPINSKI = ("Triangle de Sierpiński", 150, 3, 8)
 
     def __init__(self, real_name: str, default_sensibility: int, iteration_min: int, iteration_max: int):
         self.real_name = real_name

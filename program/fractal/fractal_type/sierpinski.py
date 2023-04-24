@@ -4,7 +4,7 @@ from pygame import Surface
 from program.fractal.fractalbase import FractalBase
 
 
-class Sierpinsky(FractalBase):
+class Sierpinski(FractalBase):
 
     def __init__(self, fractal_manager):
         from program.settings.settingsbase import screen_settings
