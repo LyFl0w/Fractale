@@ -74,6 +74,8 @@ def iteration_selected_event(event):
 
     if new_iteration != fractal_settings.iteration:
         fractal_settings.iteration = event.widget.get()
+        fractal_settings.save()
+
         app.add_element_to_queue("update_fractal")
 
 
@@ -131,10 +133,11 @@ def run(app_):
         filter_status_button.config(text="Désactiver" if screen_settings.display_filter else "Activer")
         cursor_status_button.config(
             text="Désactiver le curseur" if screen_settings.display_cursor else "Activer le curseur")
-        slider_iteration.set(fractal_settings.iteration)
 
         fractal_type = fractalbase.get_fractal_by_name(fractal_settings.fractal_type)
         slider_iteration.config(from_=fractal_type.iteration_min, to=fractal_type.iteration_max)
+        slider_iteration.set(fractal_settings.iteration)
+
         fractal_power_slider.set(fractal_settings.fractal_power)
 
     def reset_settings():
