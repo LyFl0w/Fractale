@@ -1,8 +1,9 @@
-#
-#  Fracteur Copyright (c) 2023 LyFlow
+#                                                                               
+#  Fracteur Copyright (c) 2023 LyFlow and Florely
 #  This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
 #  This is free software, and you are welcome to redistribute it under certain conditions; type `show c' for details.
-#
+#                                                                               
+
 
 from program.fractal.fractal_type.mandelbrot import Mandelbrot
 
