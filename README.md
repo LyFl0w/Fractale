@@ -20,7 +20,7 @@ Pygame est utilisé pour afficher les fractales et TKinter permet aux utilisateu
 2. Ouvrer l'interface graphique avec la touche 🅿️
 3. Utilisez les boutons de l'interface graphique pour ajuster les paramètres de génération de fractales. 🔧
 
-## 🔥 Prérequis 
+## Prérequis 🔥
 
 - python 3.10
 - pygame 2.3.0
