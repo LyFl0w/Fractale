@@ -41,15 +41,18 @@ class SpongeCube(FractalBase):
 
         pos_cube = self.position_cube(0, 0, screen_settings.get_generation_size()[1] / 3)
         bloc = self.position_cube(pos_cube[0] * screen_settings.get_generation_size()[1] / 3,
-                                  pos_cube[1] * screen_settings.get_generation_size()[1] / 3, screen_settings.get_generation_size()[1] / 9)
-                                  
+                                  pos_cube[1] * screen_settings.get_generation_size()[1] / 3,
+                                  screen_settings.get_generation_size()[1] / 9)
+
         if self.fractal_manager.zoom >= 9:
             self.fractal_manager.zoom /= 3
             self.fractal_manager.center[0] = (screen_settings.get_generation_size()[1] / 3) * bloc[0] + (
-                    self.fractal_manager.center[0] - (pos_cube[0] * (screen_settings.get_generation_size()[1] / 3) + bloc[0] * (
+                    self.fractal_manager.center[0] - (
+                        pos_cube[0] * (screen_settings.get_generation_size()[1] / 3) + bloc[0] * (
                         screen_settings.get_generation_size()[1] / 9))) * 3
             self.fractal_manager.center[1] = (screen_settings.get_generation_size()[1] / 3) * bloc[1] + (
-                    self.fractal_manager.center[1] - (pos_cube[1] * (screen_settings.get_generation_size()[1] / 3) + bloc[1] * (
+                    self.fractal_manager.center[1] - (
+                        pos_cube[1] * (screen_settings.get_generation_size()[1] / 3) + bloc[1] * (
                         screen_settings.get_generation_size()[1] / 9))) * 3
         if abs(self.fractal_manager.center[0]) > self.diff[0]:
             if self.fractal_manager.center[0] > 0:
@@ -82,7 +85,8 @@ class SpongeCube(FractalBase):
                 for i in [-1, 0, 1]:
                     for j in [-1, 0, 1]:
                         if (i, j) != (0, 0):
-                            a += self.fractale_matrice(zoom, screen, h_carre / 3, w_carre / 3, maxit - 1, x + (w_carre / 3) * i,
+                            a += self.fractale_matrice(zoom, screen, h_carre / 3, w_carre / 3, maxit - 1,
+                                                       x + (w_carre / 3) * i,
                                                        y + (h_carre / 3) * j, next_distance)
         return a
 
@@ -91,14 +95,17 @@ class SpongeCube(FractalBase):
 
         mb = pygame.Surface(screen_settings.get_generation_size())
         self.fractal_manager.center = self.infini()
-        self.fractale_matrice(zoom=self.fractal_manager.zoom, screen=mb, h_carre=screen_settings.get_generation_size()[1],
+        self.fractale_matrice(zoom=self.fractal_manager.zoom, screen=mb,
+                              h_carre=screen_settings.get_generation_size()[1],
                               w_carre=screen_settings.get_generation_size()[0], maxit=fractal_settings.iteration,
                               x=-self.fractal_manager.center[0], y=self.fractal_manager.center[1])
 
         for i in range(-1, 2):
             for y in range(-1, 2):
-                self.fractale_matrice(zoom=self.fractal_manager.zoom, screen=mb, h_carre=screen_settings.get_generation_size()[1],
-                                      w_carre=screen_settings.get_generation_size()[0], maxit=fractal_settings.iteration,
+                self.fractale_matrice(zoom=self.fractal_manager.zoom, screen=mb,
+                                      h_carre=screen_settings.get_generation_size()[1],
+                                      w_carre=screen_settings.get_generation_size()[0],
+                                      maxit=fractal_settings.iteration,
                                       x=-self.fractal_manager.center[0] + i * screen_settings.get_generation_size()[1],
                                       y=self.fractal_manager.center[1] + y * screen_settings.get_generation_size()[0],
                                       distance=True)
