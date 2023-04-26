@@ -1,13 +1,21 @@
-from program import interface
-from program.fractal.fractalbase import FractalType
-from program.utils import queue_update
-from program.fractal.fractal_manger import FractalManager
-from program.settings.fractal_settings import FractalSettings
-from program.settings.screen_settings import ScreenSettings
+#  Fracteur Copyright (c) 2023 LyFlow
+#  This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+#  This is free software, and you are welcome to redistribute it under certain conditions; type `show c' for details.
+
+#
+#
 
 import threading
-import pygame
 import tkinter as tk
+
+import pygame
+
+from program import interface
+from program.fractal.fractal_manger import FractalManager
+from program.fractal.fractalbase import FractalType
+from program.settings.fractal_settings import FractalSettings
+from program.settings.screen_settings import ScreenSettings
+from program.utils import queue_update
 
 
 class App:

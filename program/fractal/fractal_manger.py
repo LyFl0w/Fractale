@@ -1,12 +1,18 @@
+#
+#  Fracteur Copyright (c) 2023 LyFlow
+#  This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+#  This is free software, and you are welcome to redistribute it under certain conditions; type `show c' for details.
+#
+
 import pygame
 
 from program import interface
 from program.fractal import fractalbase
-from program.fractal.fractalbase import FractalType
-from program.fractal.fractal_type.mandelbrot import Mandelbrot
 from program.fractal.fractal_type.julia import Julia
+from program.fractal.fractal_type.mandelbrot import Mandelbrot
 from program.fractal.fractal_type.sierpinski import Sierpinski
 from program.fractal.fractal_type.sponge_cube import SpongeCube
+from program.fractal.fractalbase import FractalType
 
 
 class FractalManager:
