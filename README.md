@@ -1,6 +1,6 @@
-# Fracteur - Une application de génération de fractales ! 🌟
+# Fracteur - Une application génératrice de fractales 🌟
 
-Fracteur est une application de génération de fractales qui permet aux utilisateurs de créer et de visualiser une grande variété de fractales. 🌀
+Fracteur est une application de génération de fractales qui permet aux utilisateurs de créer et de visualiser une grande variété de fractales créer par [@LyFlow](https://github.com/LyFl0w) et [@Florely](https://github.com/Fl0rely).
 
 ## Comment ça marche 🛠️
 
