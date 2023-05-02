@@ -1,5 +1,10 @@
 # Fracteur - Une application génératrice de fractales 🌟
 
+![version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![progress](https://img.shields.io/badge/Progress-70%25-green)
+
+![fracteur](https://user-images.githubusercontent.com/91786781/234685748-74331527-fdaa-41e1-9723-ebc3b0bcbb21.png)
+
 Fracteur est une application de génération de fractales qui permet aux utilisateurs de créer et de visualiser une grande variété de fractales créer par [@LyFlow](https://github.com/LyFl0w) et [@Florely](https://github.com/Fl0rely).
 
 ## Comment ça marche 🛠️
