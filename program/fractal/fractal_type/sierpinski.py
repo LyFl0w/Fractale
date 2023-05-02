@@ -24,7 +24,6 @@ class Sierpinski(FractalBase):
                             ([0, 0],
                              [screen_settings.get_generation_size()[1] // 2, screen_settings.get_generation_size()[0]],
                              [screen_settings.get_generation_size()[1], 0]), 0)
-
         self.fractal_manager.center = [0, -400]
 
     def fractale_matrice_triangle(self, screen, zoom=1.0, maxit=1, taille=1.0, x=0.0, y=0.0, distance=False):
@@ -63,3 +62,12 @@ class Sierpinski(FractalBase):
                                        taille=taille, x=x, y=y)
 
         return pygame.transform.flip(mb, True, False)
+
+    def update(self):
+        from program.settings.settingsbase import screen_settings
+        self.diff = [screen_settings.get_generation_size()[1] / 2, screen_settings.get_generation_size()[0] / 2]
+        self.triangle = pygame.Surface(screen_settings.get_generation_size(), pygame.SRCALPHA)
+        pygame.draw.polygon(self.triangle, (255, 255, 255),
+                            ([0, 0],
+                             [screen_settings.get_generation_size()[1] // 2, screen_settings.get_generation_size()[0]],
+                             [screen_settings.get_generation_size()[1], 0]), 0)

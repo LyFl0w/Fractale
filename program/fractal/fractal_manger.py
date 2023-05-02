@@ -58,6 +58,9 @@ class FractalManager:
         self.__fractal_type = fractalbase.get_fractal_by_name(fractal_settings.fractal_type)
         self.__update_fractal()
 
+    def get_fractal(self):
+        return self.__fractal
+
     def draw(self, screen):
         from program.settings.settingsbase import screen_settings
 

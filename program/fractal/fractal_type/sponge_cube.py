@@ -112,3 +112,7 @@ class SpongeCube(FractalBase):
                                       distance=True)
 
         return pygame.transform.flip(mb, False, True)
+
+    def update(self):
+        from program.settings.settingsbase import screen_settings
+        self.diff = [screen_settings.get_generation_size()[1] / 2, screen_settings.get_generation_size()[0] / 2]

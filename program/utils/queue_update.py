@@ -11,6 +11,7 @@ from os.path import exists
 
 import pygame.display
 
+from program.fractal.fractalbase import FractalType
 from program.utils import path
 
 
@@ -27,6 +28,12 @@ class QueueUpdate:
             if key == "screen_size":
                 from program.settings.settingsbase import screen_settings
                 self.app.screen = pygame.display.set_mode(screen_settings.get_native_size())
+
+                self.__update_fractal_init_properties()
+                self.__update_fractal()
+
+            elif key == "downsampling":
+                self.__update_fractal_init_properties()
                 self.__update_fractal()
 
             elif key == "fractal":
@@ -46,6 +53,10 @@ class QueueUpdate:
     def __update_fractal(self):
         self.app.draw_fractal()
         pygame.display.update()
+
+    def __update_fractal_init_properties(self):
+        if self.app.fractal_manager.get_fractal_type() in [FractalType.SIERPINSKI, FractalType.SPONGE_CUBE]:
+            self.app.fractal_manager.get_fractal().update()
 
     def put(self, key):
         self.__queue.put(key)
