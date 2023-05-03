@@ -8,12 +8,6 @@ from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import numpy as np
 
-hauteur = 2
-largeur = 2
-profondeur = 2
-maxit = 3
-sommet = [1, 1, 1]
-
 
 def cube_division(sommet, hauteur, largeur, profondeur, maxit):
     if maxit > 0:
@@ -42,24 +36,38 @@ def cube_division(sommet, hauteur, largeur, profondeur, maxit):
         return liste_polygone
 
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+def run(app):
+    app.cube3D_running = True
 
-# vertices of a pyramid
-v = np.array([[sommet[0] - largeur, sommet[1] - hauteur, sommet[2] - profondeur],
-              [sommet[0] - largeur, sommet[1] - hauteur, sommet[2]],
-              [sommet[0], sommet[1] - hauteur, sommet[2] - profondeur], [sommet[0], sommet[1] - hauteur, sommet[2]],
-              [sommet[0], sommet[1], sommet[2] - profondeur], [sommet[0], sommet[1], sommet[2]],
-              [sommet[0] - largeur, sommet[1], sommet[2]], [sommet[0] - largeur, sommet[1], sommet[2] - profondeur]])
-ax.scatter3D(v[:, 0], v[:, 1], v[:, 2])
+    import warnings
+    warnings.filterwarnings("ignore")
 
-# generate list of sides' polygons of our pyramid
-verts = [[v[0], v[1], v[3], v[2]], [v[2], v[3], v[5], v[4]], [v[4], v[5], v[6], v[7]], [v[6], v[7], v[0], v[1]],
-         [v[0], v[2], v[4], v[7]], [v[1], v[3], v[5], v[6]]]
-if maxit > 1:
-    verts = cube_division(sommet, hauteur, largeur, profondeur, maxit)
-# plot sides
-ax.add_collection3d(Poly3DCollection(verts,
-                                     facecolors='cyan', linewidths=1, edgecolors='r', alpha=.25))
+    hauteur = 2
+    largeur = 2
+    profondeur = 2
+    maxit = 3
+    sommet = [1, 1, 1]
 
-plt.show()
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    # vertices of a pyramid
+    v = np.array([[sommet[0] - largeur, sommet[1] - hauteur, sommet[2] - profondeur],
+                  [sommet[0] - largeur, sommet[1] - hauteur, sommet[2]],
+                  [sommet[0], sommet[1] - hauteur, sommet[2] - profondeur], [sommet[0], sommet[1] - hauteur, sommet[2]],
+                  [sommet[0], sommet[1], sommet[2] - profondeur], [sommet[0], sommet[1], sommet[2]],
+                  [sommet[0] - largeur, sommet[1], sommet[2]],
+                  [sommet[0] - largeur, sommet[1], sommet[2] - profondeur]])
+    ax.scatter3D(v[:, 0], v[:, 1], v[:, 2])
+
+    # generate list of sides' polygons of our pyramid
+    verts = [[v[0], v[1], v[3], v[2]], [v[2], v[3], v[5], v[4]], [v[4], v[5], v[6], v[7]], [v[6], v[7], v[0], v[1]],
+             [v[0], v[2], v[4], v[7]], [v[1], v[3], v[5], v[6]]]
+    if maxit > 1:
+        verts = cube_division(sommet, hauteur, largeur, profondeur, maxit)
+    # plot sides
+    ax.add_collection3d(Poly3DCollection(verts,
+                                         facecolors='cyan', linewidths=1, edgecolors='r', alpha=.25))
+
+    plt.show()
+    app.cube3D_running = False

@@ -11,6 +11,7 @@ import tkinter as tk
 import pygame
 
 from program import interface
+from program.prototype import cube3d, pyramide3d
 from program.fractal.fractal_manger import FractalManager
 from program.fractal.fractalbase import FractalType
 from program.settings.fractal_settings import FractalSettings
@@ -34,6 +35,8 @@ class App:
         self.__queue_update = queue_update.QueueUpdate(self)
 
         self.fractal_manager = FractalManager(zoom=0.5)
+
+        self.cube3D_running, self.pyramide3D_running = False, False
 
     def zoom_at_cursor(self, zoom_factor):
         from program.settings.settingsbase import screen_settings
@@ -102,6 +105,10 @@ class App:
                         if interface.root is None:
                             # Démarrer le thread Tkinter uniquement s'il n'est pas déjà en cours d'exécution
                             threading.Thread(target=interface.run, args=(self,)).start()
+                    if event.key == pygame.K_c and not self.cube3D_running:
+                        threading.Thread(target=cube3d.run, args=(self,)).start()
+                    if event.key == pygame.K_b and not self.pyramide3D_running:
+                        threading.Thread(target=pyramide3d.run, args=(self,)).start()
 
             # remove cursor
             if not pygame.mouse.get_pressed()[0]:
