@@ -33,7 +33,7 @@ def downsampling_selected_event(event):
     downsampling_value = event.widget.get() / 100
     if screen_settings.get_generation_size_optimization() != downsampling_value:
         screen_settings.set_generation_size_optimization(downsampling_value)
-        app.add_element_to_queue("update_fractal")
+        app.add_element_to_queue("downsampling")
 
 
 def fractal_selected_event(event):
