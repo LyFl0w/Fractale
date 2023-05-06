@@ -20,7 +20,7 @@ class SpongeCube(FractalBase):
 
         super().__init__(fractal_manager)
         self.fractal_value = None
-        self.diff = [screen_settings.get_generation_size()[1] / 2, screen_settings.get_generation_size()[0] / 2]
+        self.diff = [screen_settings.get_generation_size()[0] / 2, screen_settings.get_generation_size()[1] / 2]
 
     def position_cube(self, cube_x, cube_y, width):
         if self.fractal_manager.center[0] - cube_x >= width / 2:
@@ -49,8 +49,8 @@ class SpongeCube(FractalBase):
             self.fractal_manager.zoom /= 3
             self.fractal_manager.center[0] = (screen_settings.get_generation_size()[1] / 3) * bloc[0] + (
                     self.fractal_manager.center[0] - (
-                        pos_cube[0] * (screen_settings.get_generation_size()[1] / 3) + bloc[0] * (
-                        screen_settings.get_generation_size()[1] / 9))) * 3
+                        pos_cube[0] * (screen_settings.get_generation_size()[0] / 3) + bloc[0] * (
+                        screen_settings.get_generation_size()[0] / 9))) * 3
             self.fractal_manager.center[1] = (screen_settings.get_generation_size()[1] / 3) * bloc[1] + (
                     self.fractal_manager.center[1] - (
                         pos_cube[1] * (screen_settings.get_generation_size()[1] / 3) + bloc[1] * (
@@ -81,7 +81,7 @@ class SpongeCube(FractalBase):
             if not distance:
                 a += 1
                 pygame.draw.rect(screen, (255, 255, 255), (
-                    ((x - (h_carre / 3 / 2)) * zoom + self.diff[0]), ((y - (w_carre / 3 / 2)) * zoom + self.diff[1]),
+                    ((x - (w_carre / 3 / 2)) * zoom + self.diff[0]), ((y - (h_carre / 3 / 2)) * zoom + self.diff[1]),
                     int((w_carre / 3) * zoom), int((h_carre / 3) * zoom)), 0)
                 for i in [-1, 0, 1]:
                     for j in [-1, 0, 1]:
@@ -107,8 +107,8 @@ class SpongeCube(FractalBase):
                                       h_carre=screen_settings.get_generation_size()[1],
                                       w_carre=screen_settings.get_generation_size()[0],
                                       maxit=fractal_settings.iteration,
-                                      x=-self.fractal_manager.center[0] + i * screen_settings.get_generation_size()[1],
-                                      y=self.fractal_manager.center[1] + y * screen_settings.get_generation_size()[0],
+                                      x=-self.fractal_manager.center[0] + i * screen_settings.get_generation_size()[0],
+                                      y=self.fractal_manager.center[1] + y * screen_settings.get_generation_size()[1],
                                       distance=True)
 
         return pygame.transform.flip(mb, False, True)
