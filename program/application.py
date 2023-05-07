@@ -32,6 +32,7 @@ class App:
         self.running = False
         self.draw_cursor = False
         self.moving = False
+        self.scrolling = False
 
         self.__queue_update = queue_update.QueueUpdate(self)
 
@@ -42,7 +43,7 @@ class App:
     def zoom_at_cursor(self, zoom_factor):
         from program.settings.settingsbase import screen_settings
 
-        self.set_moving()
+        self.set_scrolling()
         self.fractal_manager.zoom *= zoom_factor
         self.draw_fractal()
         if self.draw_cursor:
@@ -97,13 +98,18 @@ class App:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 4:
                         self.zoom_at_cursor(1.1)
                     elif event.button == 5:
                         self.zoom_at_cursor(0.9)
+                elif self.scrolling:
+                    self.set_not_scrolling()
+
                 if event.type == pygame.MOUSEMOTION:
                     self.handle_mouse_movement()
+
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
                         if interface.root is None:
@@ -116,6 +122,7 @@ class App:
 
             # remove cursor
             if not pygame.mouse.get_pressed()[0]:
+
                 self.set_not_moving()
                 if self.draw_cursor:
                     self.draw_cursor = False
@@ -149,4 +156,14 @@ class App:
     def set_not_moving(self):
         if self.moving:
             self.moving = False
+            self.fractal_manager.update_downsampling(1)
+
+    def set_scrolling(self):
+        if not self.scrolling:
+            self.scrolling = True
+            self.fractal_manager.update_downsampling(0.8)
+
+    def set_not_scrolling(self):
+        if self.scrolling:
+            self.scrolling = False
             self.fractal_manager.update_downsampling(1)
