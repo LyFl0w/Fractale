@@ -19,7 +19,6 @@ class SpongeCube(FractalBase):
         from program.settings.settingsbase import screen_settings
 
         super().__init__(fractal_manager)
-        self.fractal_value = None
         self.diff = None
         self.update()
 

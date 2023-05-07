@@ -4,42 +4,53 @@
 #  This is free software, and you are welcome to redistribute it under certain conditions; type `show c' for details.
 #                                                                               
 
-
+from numba import jit
 import numpy as np
 import pygame
 from pygame.surface import Surface
-
 from program.fractal.fractalbase import FractalBase
+from program.utils import math
+
+
+@jit(nopython=True)
+def __mandelbrot(c, maxiter, power):
+    z = c
+    for n in range(maxiter):
+        if z.real * z.real + z.imag * z.imag > 4.0:
+            return n
+        z = math.power2(z, power) + c
+    return 0
+
+
+@jit(nopython=True)
+def mandelbrot_set(xmin, xmax, ymin, ymax, width, height, maxiter, power):
+    r1 = np.linspace(xmin, xmax, width)
+    r2 = np.linspace(ymin, ymax, height)
+    n3 = np.empty((width, height))
+    for i in range(width):
+        for j in range(height):
+            n3[i, j] = __mandelbrot(r1[i] + 1j * r2[j], maxiter, power)
+    return n3
 
 
 class Mandelbrot(FractalBase):
 
     def __init__(self, fractal_manager):
         super().__init__(fractal_manager)
-        self.fractal_value = None
 
     def get_surface(self) -> Surface:
-        from program.settings.settingsbase import screen_settings, fractal_settings
-        diverge = np.zeros((screen_settings.get_generation_size()[1], screen_settings.get_generation_size()[0]), dtype=bool)
-        divtime = np.full((screen_settings.get_generation_size()[1], screen_settings.get_generation_size()[0]), fractal_settings.iteration,
-                          dtype=int)
-
+        from program.settings.settingsbase import fractal_settings
         xmin, xmax = self.fractal_manager.center[0] - 1 / self.fractal_manager.zoom, self.fractal_manager.center[
             0] + 1 / self.fractal_manager.zoom
+
         ymin, ymax = self.fractal_manager.center[1] - 1 / self.fractal_manager.zoom, self.fractal_manager.center[
             1] + 1 / self.fractal_manager.zoom
-        X, Y = np.meshgrid(np.linspace(xmin, xmax, screen_settings.get_generation_size()[0]),
-                           np.linspace(ymin, ymax, screen_settings.get_generation_size()[1]))
-        z = X + Y * 1j
-        fractal = z if self.fractal_value is None else self.fractal_value
 
-        for i in range(fractal_settings.iteration):
-            z = z ** fractal_settings.fractal_power + fractal
-            diverge = np.logical_or(diverge, z * np.conj(z) > 2 ** 2)
-            divtime[np.logical_and(diverge, divtime == fractal_settings.iteration)] = i
-            z[diverge] = 2
+        screen_width, screen_height = self.fractal_manager.get_fractal_details()
+        maxiter = fractal_settings.iteration
 
-        fractal_array = np.flipud(np.rot90(divtime))
-        fractal_surface = pygame.surfarray.make_surface(fractal_array)
-        pygame.surfarray.blit_array(fractal_surface, fractal_array)
+        n3 = mandelbrot_set(xmin, xmax, ymin, ymax, screen_width, screen_height, maxiter,
+                            fractal_settings.fractal_power)
+        fractal_surface = pygame.surfarray.make_surface(n3)
+
         return fractal_surface

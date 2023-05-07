@@ -14,11 +14,8 @@ from program.fractal.fractalbase import FractalBase
 class Sierpinski(FractalBase):
 
     def __init__(self, fractal_manager):
-        from program.settings.settingsbase import screen_settings
-
         super().__init__(fractal_manager)
-        self.fractal_value = None
-        self.diff = self.triangle = None
+        self.diff, self.triangle = None, None
         self.update()
         self.fractal_manager.center = [0, -400]
 

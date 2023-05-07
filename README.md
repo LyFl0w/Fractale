@@ -1,7 +1,7 @@
 # Fracteur - Une application génératrice de fractales 🌟
 
 ![version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![progress](https://img.shields.io/badge/Progress-70%25-green)
+![progress](https://img.shields.io/badge/Progress-80%25-green)
 
 ![fracteur](https://user-images.githubusercontent.com/91786781/234685748-74331527-fdaa-41e1-9723-ebc3b0bcbb21.png)
 
@@ -30,6 +30,7 @@ Pygame est utilisé pour afficher les fractales et TKinter permet aux utilisateu
 - python 3.10
 - pygame 2.3.0
 - numpy 1.24.2
+- matplotlib 3.5.1
 
 ## Exemple de fractale 🌅
 

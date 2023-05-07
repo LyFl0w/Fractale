@@ -30,10 +30,12 @@ class QueueUpdate:
                 self.app.screen = pygame.display.set_mode(screen_settings.get_native_size())
 
                 self.__update_fractal_init_properties()
+                self.app.fractal_manager.update_downsampling()
                 self.__update_fractal()
 
             elif key == "downsampling":
                 self.__update_fractal_init_properties()
+                self.app.fractal_manager.update_downsampling()
                 self.__update_fractal()
 
             elif key == "fractal":

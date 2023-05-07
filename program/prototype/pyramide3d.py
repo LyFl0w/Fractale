@@ -87,7 +87,6 @@ def run(app):
     v = np.array([[-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1], [0, 0, 1]])
     ax.scatter3D(v[:, 0], v[:, 1], v[:, 2])
 
-    print(v)
     # generate list of sides' polygons of our pyramid
     verts = [[v[0], v[1], v[4]], [v[0], v[3], v[4]],
              [v[2], v[1], v[4]], [v[2], v[3], v[4]], [v[0], v[1], v[2], v[3]]]
