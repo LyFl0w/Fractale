@@ -20,7 +20,8 @@ class SpongeCube(FractalBase):
 
         super().__init__(fractal_manager)
         self.fractal_value = None
-        self.diff = [screen_settings.get_generation_size()[0] / 2, screen_settings.get_generation_size()[1] / 2]
+        self.diff = None
+        self.update()
 
     def position_cube(self, cube_x, cube_y, width):
         if self.fractal_manager.center[0] - cube_x >= width / 2:
@@ -49,12 +50,12 @@ class SpongeCube(FractalBase):
             self.fractal_manager.zoom /= 3
             self.fractal_manager.center[0] = (screen_settings.get_generation_size()[1] / 3) * bloc[0] + (
                     self.fractal_manager.center[0] - (
-                        pos_cube[0] * (screen_settings.get_generation_size()[0] / 3) + bloc[0] * (
-                        screen_settings.get_generation_size()[0] / 9))) * 3
+                    pos_cube[0] * (screen_settings.get_generation_size()[0] / 3) + bloc[0] * (
+                    screen_settings.get_generation_size()[0] / 9))) * 3
             self.fractal_manager.center[1] = (screen_settings.get_generation_size()[1] / 3) * bloc[1] + (
                     self.fractal_manager.center[1] - (
-                        pos_cube[1] * (screen_settings.get_generation_size()[1] / 3) + bloc[1] * (
-                        screen_settings.get_generation_size()[1] / 9))) * 3
+                    pos_cube[1] * (screen_settings.get_generation_size()[1] / 3) + bloc[1] * (
+                    screen_settings.get_generation_size()[1] / 9))) * 3
         if abs(self.fractal_manager.center[0]) > self.diff[0]:
             if self.fractal_manager.center[0] > 0:
                 self.fractal_manager.center[0] -= screen_settings.get_generation_size()[0]
@@ -115,4 +116,5 @@ class SpongeCube(FractalBase):
 
     def update(self):
         from program.settings.settingsbase import screen_settings
-        self.diff = [screen_settings.get_generation_size()[1] / 2, screen_settings.get_generation_size()[0] / 2]
+        self.diff = [screen_settings.get_generation_size()[0] / 2, screen_settings.get_generation_size()[1] / 2]
+
