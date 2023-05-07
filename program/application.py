@@ -64,7 +64,7 @@ class App:
                                  self.fractal_manager.zoom * 5))
             self.fractal_manager.center = [self.fractal_manager.center[0] - dx * speed,
                                            self.fractal_manager.center[1] - dy * speed *
-                                           (1 if fractal_settings.fractal_type in [FractalType.SIERPINSKI] else 1)]
+                                           (-1 if fractal_settings.fractal_type in [FractalType.SIERPINSKI.name] else 1)]
             self.draw_fractal()
 
             if screen_settings.display_cursor:
