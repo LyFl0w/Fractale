@@ -13,27 +13,30 @@ from program.fractal.fractalbase import FractalBase
 
 
 @jit(nopython=True)
-def __mandelbrot(creal, cimag, maxiter):
-    real = creal
-    imag = cimag
+def __mandelbrot(c, maxiter, power):
+    z = c
     for n in range(maxiter):
-        real2 = real * real
-        imag2 = imag * imag
-        if real2 + imag2 > 4.0:
+        if z.real * z.real + z.imag * z.imag > 4.0:
             return n
-        imag = 2 * real * imag + cimag
-        real = real2 - imag2 + creal
-    return maxiter
+        z = __power(z, power) + c
+    return 0
 
 
 @jit(nopython=True)
-def mandelbrot_set(xmin, xmax, ymin, ymax, width, height, maxiter):
+def __power(number, power):
+    if power == 0:
+        return 1
+    return number * __power(number, power-1)
+
+
+@jit(nopython=True)
+def mandelbrot_set(xmin, xmax, ymin, ymax, width, height, maxiter, power):
     r1 = np.linspace(xmin, xmax, width)
     r2 = np.linspace(ymin, ymax, height)
     n3 = np.empty((width, height))
     for i in range(width):
         for j in range(height):
-            n3[i, j] = __mandelbrot(r1[i], r2[j], maxiter)
+            n3[i, j] = __mandelbrot(r1[i] + 1j * r2[j], maxiter, power)
     return n3
 
 
@@ -54,7 +57,8 @@ class Mandelbrot(FractalBase):
         screen_width, screen_height = self.fractal_manager.get_fractal_details()
         maxiter = fractal_settings.iteration
 
-        n3 = mandelbrot_set(xmin, xmax, ymin, ymax, screen_width, screen_height, maxiter)
+        n3 = mandelbrot_set(xmin, xmax, ymin, ymax, screen_width, screen_height, maxiter,
+                            fractal_settings.fractal_power)
         fractal_surface = pygame.surfarray.make_surface(n3)
 
         return fractal_surface
