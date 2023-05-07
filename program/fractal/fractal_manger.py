@@ -23,6 +23,9 @@ class FractalManager:
 
         # center[0] -> x / center [1] -> y
         self.center = [0, 0]
+        self.__fractal_details = None
+
+        self.update_downsampling()
 
         self.default_zoom = zoom
         self.zoom = zoom
@@ -37,7 +40,8 @@ class FractalManager:
         self.center = [0, 0]
         self.zoom = self.default_zoom
 
-        fractal_settings.iteration = max(min(fractal_settings.iteration, self.__fractal_type.iteration_max), self.__fractal_type.iteration_min)
+        fractal_settings.iteration = max(min(fractal_settings.iteration, self.__fractal_type.iteration_max),
+                                         self.__fractal_type.iteration_min)
         interface.update_iteration(self.__fractal_type)
 
         if self.__fractal_type == FractalType.MANDELBROT:
@@ -66,10 +70,18 @@ class FractalManager:
 
         fractal_surface = self.__fractal.get_surface()
 
-        if screen_settings.get_generation_size_optimization() != 1:
-            fractal_surface = pygame.transform.scale(fractal_surface, screen_settings.get_native_size())
+        fractal_surface = pygame.transform.scale(fractal_surface, screen_settings.get_native_size())
 
         screen.blit(fractal_surface, (0, 0))
 
         if screen_settings.display_filter:
             screen.fill(screen_settings.filter, special_flags=8)
+
+    def update_downsampling(self, details=1.0):
+        from program.settings.settingsbase import screen_settings
+
+        self.__fractal_details = [int(screen_settings.get_generation_size()[0] * details),
+                                  int(screen_settings.get_generation_size()[1] * details)]
+
+    def get_fractal_details(self):
+        return self.__fractal_details
