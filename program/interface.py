@@ -10,12 +10,15 @@ import tkinter as tk
 from tkinter import ttk, colorchooser
 
 from program.fractal import fractalbase
+from program.fractal.fractalbase import FractalType
 
 root = None
 app = None
 
 entry_x, entry_y, entry_z = None, None, None
 slider_iteration = None
+sensibility_fractal_power_julia_c_frame, fractal_power_frame, fractal_c_frame = None, None, None
+entry_cx, entry_cy = None, None
 
 
 def screen_size_selected_event(event):
@@ -44,6 +47,7 @@ def fractal_selected_event(event):
         fractal_settings.fractal_type = fractal_selected.name
         fractal_settings.save()
         app.add_element_to_queue("fractal")
+        update_fractal_type(fractal_selected.name)
 
 
 def sensibility_selected_event(event):
@@ -100,7 +104,7 @@ def update_fractal_power(event):
 
 def teleport_position_event():
     app.fractal_manager.center = [float(entry_x.get()), float(entry_y.get())]
-    app.fractal_manager.zoom = float(entry_z.get())
+    app.fractal_manager.zoom = max(0.001, float(entry_z.get()))
     app.add_element_to_queue("update_fractal")
 
 
@@ -114,6 +118,122 @@ def update_iteration(fractal_type):
     slider_iteration.config(from_=fractal_type.iteration_min, to=fractal_type.iteration_max)
 
 
+def validate_float(msg, value):
+    if value.count(".") > 1:
+        return False
+
+    if (msg == "-" and value[0] != "-") or value.count("-") > 1:
+        return False
+
+    check = " .-0123456789"
+    for char in msg:
+        if char not in check:
+            return False
+    return True
+
+
+def update_c_julia_value(*args):
+    from program.settings.settingsbase import fractal_settings
+
+    def isBlank(myString):
+        return not (myString and myString.strip())
+
+    if isBlank(entry_cx.get()) or entry_cx.get() == "-":
+        entry_cx.config(textvariable=tk.DoubleVar(value=0))
+
+    if isBlank(entry_cy.get()) or entry_cy.get() == "-":
+        entry_cy.config(textvariable=tk.DoubleVar(value=0))
+
+    c = [float(entry_cx.get()), float(entry_cy.get())]
+
+    if fractal_settings.c != c:
+        fractal_settings.c = c
+        fractal_settings.save()
+        app.add_element_to_queue("update_fractal")
+
+
+def update_c_entries():
+    if entry_cx is None:
+        return
+
+    from program.settings.settingsbase import fractal_settings
+
+    cx, cy = fractal_settings.c
+    entry_cx.config(textvariable=tk.DoubleVar(value=cx))
+    entry_cy.config(textvariable=tk.DoubleVar(value=cy))
+
+
+def update_fractal_type(fractal_name):
+    global fractal_power_frame, fractal_c_frame, sensibility_fractal_power_julia_c_frame, entry_cx, entry_cy
+
+    if sensibility_fractal_power_julia_c_frame is None:
+        return
+
+    from program.settings.settingsbase import fractal_settings
+
+    if fractal_name == FractalType.MANDELBROT.name:
+        fractal_power_frame = ttk.Frame(sensibility_fractal_power_julia_c_frame)
+
+        # Titre
+        label_power = tk.Label(fractal_power_frame, text="Puissance de la Fractale")
+        label_power.pack()
+
+        # Slider
+        fractal_power_slider = tk.Scale(fractal_power_frame, from_=2, to=50, resolution=1, orient=tk.HORIZONTAL,
+                                        length=150)
+        fractal_power_slider.pack()
+
+        # Ajout d'un gestionnaire d'événement pour détecter le relâchement du curseur du slider
+        fractal_power_slider.bind("<ButtonRelease-3>", update_fractal_power)
+        fractal_power_slider.bind("<ButtonRelease-1>", update_fractal_power)
+
+        fractal_power_frame.grid(row=0, column=1, sticky=tk.W, padx=5)
+
+        fractal_power_slider.set(fractal_settings.fractal_power)
+    elif fractal_power_frame is not None:
+        fractal_power_frame.destroy()
+
+    if fractal_name == FractalType.JULIA.name:
+
+        fractal_c_frame = ttk.Frame(sensibility_fractal_power_julia_c_frame)
+
+        # Titre
+        label_c = tk.Label(fractal_c_frame, text="Valeur donnée de C")
+        label_c.pack(pady=8)
+
+        position_c_frame = ttk.Frame(fractal_c_frame)
+
+        # Fonction de validation enregistrée pour les zones de saisie
+        float_validation_c = fractal_c_frame.register(validate_float)
+
+        # Zone de saisie pour x
+        label_cx = tk.Label(position_c_frame, text="c = ")
+        label_cx.grid(row=0, column=0, sticky=tk.W)
+        entry_cx = tk.Entry(position_c_frame, validate="key",
+                            validatecommand=(float_validation_c, "%S", "%P"), width=15)
+        entry_cx.grid(row=0, column=1, sticky=tk.W, pady=2)
+
+        entry_cy = tk.Entry(position_c_frame, validate="key",
+                            validatecommand=(float_validation_c, "%S", "%P"), width=15)
+        entry_cy.grid(row=0, column=2, sticky=tk.W, pady=2)
+
+        # Zone de saisie pour y
+        label_cy = tk.Label(position_c_frame, text="i")
+        label_cy.grid(row=0, column=3, sticky=tk.W)
+
+        entry_cx.bind('<KeyRelease>', update_c_julia_value)
+        entry_cy.bind('<KeyRelease>', update_c_julia_value)
+
+        update_c_entries()
+
+        position_c_frame.pack(pady=12)
+
+        fractal_c_frame.grid(row=0, column=1, sticky=tk.W, padx=5)
+
+    elif fractal_c_frame is not None:
+        fractal_c_frame.destroy()
+
+
 def kill_thread():
     global root
     if root is not None:
@@ -124,7 +244,8 @@ def kill_thread():
 def run(app_):
     from program.settings.settingsbase import screen_settings, fractal_settings
 
-    global root, app, entry_x, entry_y, entry_z, slider_iteration
+    global root, app, entry_x, entry_y, entry_z, slider_iteration, sensibility_fractal_power_julia_c_frame, \
+        fractal_power_frame, fractal_c_frame, entry_cx, entry_cy
     app = app_
 
     def update_position_entries():
@@ -145,7 +266,8 @@ def run(app_):
         slider_iteration.config(from_=fractal_type.iteration_min, to=fractal_type.iteration_max)
         slider_iteration.set(fractal_settings.iteration)
 
-        fractal_power_slider.set(fractal_settings.fractal_power)
+        if fractal_type == FractalType.MANDELBROT:
+            fractal_power_slider.set(fractal_settings.fractal_power)
 
     def reset_settings():
         screen_settings.reset_settings()
@@ -161,6 +283,7 @@ def run(app_):
         time.sleep(1)
 
         update_position_entries()
+        update_c_entries()
 
     def display_filter_event():
         filter_status = not screen_settings.display_filter
@@ -179,19 +302,6 @@ def run(app_):
         app.add_element_to_queue("update_fractal")
 
         cursor_status_button.config(text="Désactiver le curseur" if cursor_status else "Activer le curseur")
-
-    def validate_float(msg, value):
-        if value.count(".") > 1:
-            return False
-
-        if (msg == "-" and value[0] != "-") or value.count("-") > 1:
-            return False
-
-        check = " .-0123456789"
-        for char in msg:
-            if char not in check:
-                return False
-        return True
 
     # Création de la fenêtre
     root = tk.Tk()
@@ -296,11 +406,11 @@ def run(app_):
 
     # Cadre pour le slider de sensibilité et fractal power
 
-    sensibility_fractal_power_frame = ttk.Frame(options_frame)
+    sensibility_fractal_power_julia_c_frame = ttk.Frame(options_frame)
 
     # Cadre pour le slider de sensibilité
 
-    sensibility_frame = ttk.Frame(sensibility_fractal_power_frame)
+    sensibility_frame = ttk.Frame(sensibility_fractal_power_julia_c_frame)
 
     # Titre
     label = tk.Label(sensibility_frame, text="Sensibilité")
@@ -317,24 +427,64 @@ def run(app_):
     sensibility_frame.grid(row=0, column=0, sticky=tk.W, padx=5)
 
     # Cadre pour le slider de fractal power
+    fractal_type = app.fractal_manager.get_fractal_type()
 
-    fractal_power_frame = ttk.Frame(sensibility_fractal_power_frame)
+    if fractal_type == FractalType.MANDELBROT:
+        fractal_power_frame = ttk.Frame(sensibility_fractal_power_julia_c_frame)
 
-    # Titre
-    label = tk.Label(fractal_power_frame, text="Puissance de la Fractale")
-    label.pack()
+        # Titre
+        label_power = tk.Label(fractal_power_frame, text="Puissance de la Fractale")
+        label_power.pack()
 
-    # Slider
-    fractal_power_slider = tk.Scale(fractal_power_frame, from_=2, to=50, resolution=1, orient=tk.HORIZONTAL, length=150)
-    fractal_power_slider.pack()
+        # Slider
+        fractal_power_slider = tk.Scale(fractal_power_frame, from_=2, to=50, resolution=1, orient=tk.HORIZONTAL,
+                                        length=150)
+        fractal_power_slider.pack()
 
-    # Ajout d'un gestionnaire d'événement pour détecter le relâchement du curseur du slider
-    fractal_power_slider.bind("<ButtonRelease-3>", update_fractal_power)
-    fractal_power_slider.bind("<ButtonRelease-1>", update_fractal_power)
+        # Ajout d'un gestionnaire d'événement pour détecter le relâchement du curseur du slider
+        fractal_power_slider.bind("<ButtonRelease-3>", update_fractal_power)
+        fractal_power_slider.bind("<ButtonRelease-1>", update_fractal_power)
 
-    fractal_power_frame.grid(row=0, column=1, sticky=tk.W, padx=5)
+        fractal_power_frame.grid(row=0, column=1, sticky=tk.W, padx=5)
 
-    sensibility_fractal_power_frame.pack()
+    elif fractal_type == FractalType.JULIA:
+
+        fractal_c_frame = ttk.Frame(sensibility_fractal_power_julia_c_frame)
+
+        # Titre
+        label_c = tk.Label(fractal_c_frame, text="Valeur donnée de C")
+        label_c.pack(pady=8)
+
+        position_c_frame = ttk.Frame(fractal_c_frame)
+
+        # Fonction de validation enregistrée pour les zones de saisie
+        float_validation_c = fractal_c_frame.register(validate_float)
+
+        # Zone de saisie pour x
+        label_cx = tk.Label(position_c_frame, text="c = ")
+        label_cx.grid(row=0, column=0, sticky=tk.W)
+        entry_cx = tk.Entry(position_c_frame, validate="key",
+                            validatecommand=(float_validation_c, "%S", "%P"), width=15)
+        entry_cx.grid(row=0, column=1, sticky=tk.W, pady=2)
+
+        entry_cy = tk.Entry(position_c_frame, validate="key",
+                            validatecommand=(float_validation_c, "%S", "%P"), width=15)
+        entry_cy.grid(row=0, column=2, sticky=tk.W, pady=2)
+
+        # Zone de saisie pour y
+        label_cy = tk.Label(position_c_frame, text="i")
+        label_cy.grid(row=0, column=3, sticky=tk.W)
+
+        entry_cx.bind('<KeyRelease>', update_c_julia_value)
+        entry_cy.bind('<KeyRelease>', update_c_julia_value)
+
+        update_c_entries()
+
+        position_c_frame.pack(pady=12)
+
+        fractal_c_frame.grid(row=0, column=1, sticky=tk.W, padx=5)
+
+    sensibility_fractal_power_julia_c_frame.pack()
 
     # Bouton pour réinitialiser les paramètres
     reset_button = ttk.Button(options_frame, text="Réinitialisation des Paramètres", command=reset_settings)
@@ -415,3 +565,5 @@ def run(app_):
     root = None
     entry_x, entry_y, entry_z = None, None, None
     slider_iteration = None
+    sensibility_fractal_power_julia_c_frame, fractal_power_frame, fractal_c_frame = None, None, None
+    entry_cx, entry_cy = None, None
