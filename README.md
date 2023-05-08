@@ -8,7 +8,6 @@
 Fracteur est une application de génération de fractales qui permet aux utilisateurs de créer et de visualiser une grande variété de fractales créer par [@LyFlow](https://github.com/LyFl0w) et [@Florely](https://github.com/Fl0rely).
 
 ## Comment ça marche 🛠️
-
 Fracteur est écrit en Python et utilise la bibliothèque graphique `Pygame`, `Tkinter`.
 Pygame est utilisé pour afficher les fractales et TKinter permet aux utilisateurs de pouvoir ajuster les paramètres de génération des fractales via l'interface graphique de l'application en utilisant la touche 🅿️.
 
@@ -29,7 +28,6 @@ Pygame est utilisé pour afficher les fractales et TKinter permet aux utilisateu
 5. Pour visulasier les prototypes de fractales 3D vous pouvez appuyer sur la touche ©️  (pour le sponge cube) et 🅱️ (pour le triangle de sierpinski).
 
 ## Prérequis 🔥
-
 - python 3.10
 - pygame 2.3.0
 - numpy 1.24.2
@@ -37,21 +35,18 @@ Pygame est utilisé pour afficher les fractales et TKinter permet aux utilisateu
 - numba 0.57.0
 
 ## Exemple de fractale 🌅
-
 Voici un exemple de fractale générée avec Fracteur:
 
-![Exemple de fractale](https://github.com/LyFl0w/Fractale/blob/main/example.png)
+![screeshot_0](https://user-images.githubusercontent.com/91786781/236873436-a1fc13b1-e983-47cc-be80-c7452ba8d947.jpg)
+![screeshot_1](https://user-images.githubusercontent.com/91786781/236873452-e3572936-bc9c-47b7-ae90-fdb88ec73284.jpg)
+![screeshot_2](https://user-images.githubusercontent.com/91786781/236873458-66b9bc4f-aaca-466f-bd93-938a81d21682.jpg)
 
 ## Contribuer 🤝
-
 Les contributions sont les bienvenues! Si vous souhaitez contribuer à Fracteur, veuillez ouvrir une pull request.
 
 ## Licence 📜
-
 Fracteur est sous licence GNU GPLv3. Consultez le fichier `LICENSE.txt` pour plus d'informations.
 
 ## Contact 📧
-
 Si vous avez des questions ou des commentaires ou des suggestions sur Fracteur, n'hésitez pas à nous contacter via les Issues Github
-
 Merci d'avoir utilisé notre programme Fracteur ! En espérant que vous apprécierez de générer vos propres fractales. 🙏
