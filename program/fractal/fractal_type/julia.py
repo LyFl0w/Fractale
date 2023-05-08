@@ -22,7 +22,7 @@ def julia(cx, cy, zx, zy, maxiter):
 
 
 @jit(nopython=True)
-def julia_set(xmin, xmax, ymin, ymax, width, height, maxiter, cx=0.3, cy=0.5):
+def julia_set(xmin, xmax, ymin, ymax, width, height, maxiter, cx, cy):
     r1 = np.linspace(xmin, xmax, width)
     r2 = np.linspace(ymin, ymax, height)
     n3 = np.empty((width, height))
@@ -49,7 +49,9 @@ class Julia(FractalBase):
         screen_width, screen_height = self.fractal_manager.get_fractal_details()
         maxiter = fractal_settings.iteration
 
-        n3 = julia_set(xmin, xmax, ymin, ymax, screen_width, screen_height, maxiter)
+        cx, cy = fractal_settings.c
+
+        n3 = julia_set(xmin, xmax, ymin, ymax, screen_width, screen_height, maxiter, cx, cy)
         fractal_surface = pygame.surfarray.make_surface(n3)
 
         return fractal_surface

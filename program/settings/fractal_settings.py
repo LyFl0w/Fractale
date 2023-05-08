@@ -16,6 +16,7 @@ class FractalSettings(Settings):
         self.fractal_type = fractalbase.FractalType.MANDELBROT.name
         self.iteration = 10
         self.fractal_power = 2
+        self.c = [-0.8, 0.156]
 
         super().__init__("fractal")
 
