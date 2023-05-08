@@ -22,15 +22,18 @@ class Sierpinski(FractalBase):
     def fractale_matrice_triangle(self, screen, zoom=1.0, maxit=1, largeur=1.0, hauteur=1.0, x=0.0, y=0.0,
                                   distance=False):
         if maxit > 0:
+            n_it = maxit - 1
+            n_largeur = largeur / 2
+            n_hauteur = hauteur / 2
             screen.blit(pygame.transform.scale(self.triangle, (int(largeur * zoom), int(hauteur * zoom))),
                         (x * zoom + self.diff[0], y * zoom + self.diff[1]))
-            self.fractale_matrice_triangle(screen, zoom, maxit - 1, largeur / 2, hauteur / 2, x - largeur / 4,
+            self.fractale_matrice_triangle(screen, zoom, n_it, n_largeur, n_hauteur, x - largeur / 4,
                                            y + hauteur / 2,
                                            distance)
-            self.fractale_matrice_triangle(screen, zoom, maxit - 1, largeur / 2, hauteur / 2, x + largeur * 0.75,
+            self.fractale_matrice_triangle(screen, zoom, n_it, n_largeur, n_hauteur, x + largeur * 0.75,
                                            y + hauteur / 2,
                                            distance)
-            self.fractale_matrice_triangle(screen, zoom, maxit - 1, largeur / 2, hauteur / 2, x + largeur / 4,
+            self.fractale_matrice_triangle(screen, zoom, n_it, n_largeur, n_hauteur, x + largeur / 4,
                                            y - hauteur * 0.5,
                                            distance)
 
