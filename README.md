@@ -31,6 +31,7 @@ Pygame est utilisé pour afficher les fractales et TKinter permet aux utilisateu
 - pygame 2.3.0
 - numpy 1.24.2
 - matplotlib 3.5.1
+- numba 0.57.0
 
 ## Exemple de fractale 🌅
 
