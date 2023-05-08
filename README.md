@@ -24,6 +24,7 @@ Pygame est utilisé pour afficher les fractales et TKinter permet aux utilisateu
 1. Lancez le programme en exécutant `python main.py` 🚀
 2. Ouvrer l'interface graphique avec la touche 🅿️
 3. Utilisez les boutons de l'interface graphique pour ajuster les paramètres de génération de fractales. 🔧
+4. Pour visulasier les prototypes de fractales 3D vous pouvez appuyer sur la touche ©️  (pour le sponge cube) et 🅱️ (pour le triangle de sierpinski).
 
 ## Prérequis 🔥
 
