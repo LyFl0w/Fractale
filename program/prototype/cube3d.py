@@ -37,7 +37,7 @@ def cube_division(sommet, hauteur, largeur, profondeur, maxit):
 
 
 def run(app):
-    app.cube3D_running = True
+    app.matplotlib_running = True
 
     import warnings
     warnings.filterwarnings("ignore")
@@ -70,4 +70,4 @@ def run(app):
                                          facecolors='cyan', linewidths=1, edgecolors='r', alpha=.25))
 
     plt.show()
-    app.cube3D_running = False
+    app.matplotlib_running = False

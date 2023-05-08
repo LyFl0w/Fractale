@@ -38,7 +38,7 @@ class App:
 
         self.fractal_manager = FractalManager(zoom=0.5)
 
-        self.cube3D_running, self.pyramide3D_running = False, False
+        self.matplotlib_running = False
 
     def zoom_at_cursor(self, zoom_factor):
         from program.settings.settingsbase import screen_settings
@@ -115,9 +115,9 @@ class App:
                         if interface.root is None:
                             # Démarrer le thread Tkinter uniquement s'il n'est pas déjà en cours d'exécution
                             threading.Thread(target=interface.run, args=(self,)).start()
-                    if event.key == pygame.K_c and not self.cube3D_running:
+                    if event.key == pygame.K_c and not self.matplotlib_running:
                         threading.Thread(target=cube3d.run, args=(self,)).start()
-                    if event.key == pygame.K_b and not self.pyramide3D_running:
+                    if event.key == pygame.K_b and not self.matplotlib_running:
                         threading.Thread(target=pyramide3d.run, args=(self,)).start()
 
             # remove cursor

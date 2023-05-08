@@ -71,7 +71,7 @@ def pyramide_division(sommet, hauteur, largeur, maxit):
 
 
 def run(app):
-    app.pyramide3D_running = True
+    app.matplotlib_running = True
 
     import warnings
     warnings.filterwarnings("ignore")
@@ -97,4 +97,4 @@ def run(app):
                                          facecolors='cyan', linewidths=1, edgecolors='r', alpha=.25))
 
     plt.show()
-    app.pyramide3D_running = False
+    app.matplotlib_running = False
