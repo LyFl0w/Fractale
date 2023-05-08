@@ -19,6 +19,7 @@ entry_x, entry_y, entry_z = None, None, None
 slider_iteration = None
 sensibility_fractal_power_julia_c_frame, fractal_power_frame, fractal_c_frame = None, None, None
 entry_cx, entry_cy = None, None
+fractal_power_slider = None
 
 
 def screen_size_selected_event(event):
@@ -98,7 +99,6 @@ def update_fractal_power(event):
     if new_fractal_power != fractal_settings.fractal_power:
         fractal_settings.fractal_power = new_fractal_power
         fractal_settings.save()
-
         app.add_element_to_queue("update_fractal")
 
 
@@ -245,7 +245,7 @@ def run(app_):
     from program.settings.settingsbase import screen_settings, fractal_settings
 
     global root, app, entry_x, entry_y, entry_z, slider_iteration, sensibility_fractal_power_julia_c_frame, \
-        fractal_power_frame, fractal_c_frame, entry_cx, entry_cy
+        fractal_power_frame, fractal_c_frame, entry_cx, entry_cy, fractal_power_slider
     app = app_
 
     def update_position_entries():
@@ -266,24 +266,22 @@ def run(app_):
         slider_iteration.config(from_=fractal_type.iteration_min, to=fractal_type.iteration_max)
         slider_iteration.set(fractal_settings.iteration)
 
-        if fractal_type == FractalType.MANDELBROT:
-            fractal_power_slider.set(fractal_settings.fractal_power)
-
     def reset_settings():
-        screen_settings.reset_settings()
         fractal_settings.reset_settings()
+        screen_settings.reset_settings()
 
         # Update Interface
         update_parameters_value()
 
+        update_fractal_type(fractal_settings.fractal_type)
+
         # Update PyGame
-        app.add_element_to_queue("screen_size")
         app.add_element_to_queue("fractal")
+        app.add_element_to_queue("screen_size")
 
         time.sleep(1)
 
         update_position_entries()
-        update_c_entries()
 
     def display_filter_event():
         filter_status = not screen_settings.display_filter
@@ -565,5 +563,5 @@ def run(app_):
     root = None
     entry_x, entry_y, entry_z = None, None, None
     slider_iteration = None
-    sensibility_fractal_power_julia_c_frame, fractal_power_frame, fractal_c_frame = None, None, None
+    sensibility_fractal_power_julia_c_frame, fractal_power_frame, fractal_power_slider, fractal_c_frame = None, None, None, None
     entry_cx, entry_cy = None, None
