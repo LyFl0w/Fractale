@@ -13,13 +13,14 @@ Fracteur est écrit en Python et utilise la bibliothèque graphique `Pygame`, `T
 Pygame est utilisé pour afficher les fractales et TKinter permet aux utilisateurs de pouvoir ajuster les paramètres de génération des fractales via l'interface graphique de l'application en utilisant la touche 🅿️.
 
 ## Installation 🚀
+(Vous pouvez ignorer toutes les étapes d'installation si vous installez l'application Fracteur directement en format .exe depuis l'onglet release de GitHub, il vous suffira juste d'extraire le fichier .rar ou .zip)
 
 1. Cloner ce dépôt avec `git clone https://github.com/LyFl0w/Fractaeur.git` (sinon télécharger le zip du dépôt) 🧬
 2. Assurez-vous que Python 3 est installé sur votre ordinateur 🐍
 3. Installez les dépendances avec `pip install -r requirements.txt` 📦
-4. Exécutez le programme avec `python main.py` 🚀
 
 ## Utilisation 💡
+(Si vous avez téléchargé l'application sous format .exe (grace au fichier .rar ou .zip fournit dans l'onglet release de GitHub), vous avez juste à le lancer le fichier le fichier .bat ou lancer directement le fichier fracteur.exe se trouvant dans le dossier)
 
 1. Lancez le programme en exécutant `python main.py` 🚀
 2. Ouvrer l'interface graphique avec la touche 🅿️
