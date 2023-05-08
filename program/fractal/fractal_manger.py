@@ -70,7 +70,10 @@ class FractalManager:
 
         fractal_surface = self.__fractal.get_surface().convert_alpha()
 
-        fractal_surface = pygame.transform.smoothscale(fractal_surface, screen_settings.get_native_size())
+        if screen_settings.get_generation_size_optimization() > 1:
+            fractal_surface = pygame.transform.smoothscale(fractal_surface, screen_settings.get_native_size())
+        else:
+            fractal_surface = pygame.transform.scale(fractal_surface, screen_settings.get_native_size())
 
         screen.blit(fractal_surface, (0, 0))
 
