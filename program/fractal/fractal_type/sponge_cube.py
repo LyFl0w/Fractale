@@ -8,42 +8,43 @@
 import math
 
 import pygame
+from numba import jit
 from pygame.surface import Surface
 
 from program.fractal.fractalbase import FractalBase
 
 
+@jit(nopython=True)
+def position_cube(center_x, center_y, cube_x, cube_y, width):
+    if center_x - cube_x >= width / 2:
+        x = 1
+    elif center_x - cube_x <= -width / 2:
+        x = -1
+    else:
+        x = 0
+    if center_y - cube_y >= width:
+        y = 1
+    elif center_y - cube_y <= -width:
+        y = -1
+    else:
+        y = 0
+    return [x, y]
+
+
 class SpongeCube(FractalBase):
 
     def __init__(self, fractal_manager):
-        from program.settings.settingsbase import screen_settings
-
         super().__init__(fractal_manager)
         self.diff = None
         self.update()
 
-    def position_cube(self, cube_x, cube_y, width):
-        if self.fractal_manager.center[0] - cube_x >= width / 2:
-            x = 1
-        elif self.fractal_manager.center[0] - cube_x <= -width / 2:
-            x = -1
-        else:
-            x = 0
-        if self.fractal_manager.center[1] - cube_y >= width:
-            y = 1
-        elif self.fractal_manager.center[1] - cube_y <= -width:
-            y = -1
-        else:
-            y = 0
-        return [x, y]
-
     def infini(self):
         from program.settings.settingsbase import screen_settings
-
-        pos_cube = self.position_cube(0, 0, screen_settings.get_generation_size()[1] / 3)
-        bloc = self.position_cube(pos_cube[0] * screen_settings.get_generation_size()[1] / 3,
-                                  pos_cube[1] * screen_settings.get_generation_size()[1] / 3,
-                                  screen_settings.get_generation_size()[1] / 9)
+        center_x, center_y = self.fractal_manager.center[0], self.fractal_manager.center[1]
+        pos_cube = position_cube(center_x, center_y, 0, 0, screen_settings.get_generation_size()[1] / 3)
+        bloc = position_cube(center_x, center_y, pos_cube[0] * screen_settings.get_generation_size()[1] / 3,
+                             pos_cube[1] * screen_settings.get_generation_size()[1] / 3,
+                             screen_settings.get_generation_size()[1] / 9)
 
         if self.fractal_manager.zoom >= 9:
             self.fractal_manager.zoom /= 3
@@ -116,4 +117,3 @@ class SpongeCube(FractalBase):
     def update(self):
         from program.settings.settingsbase import screen_settings
         self.diff = [screen_settings.get_generation_size()[0] / 2, screen_settings.get_generation_size()[1] / 2]
-
