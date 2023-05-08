@@ -10,12 +10,14 @@ import tkinter as tk
 from tkinter import ttk, colorchooser
 
 from program.fractal import fractalbase
+from program.fractal.fractalbase import FractalType
 
 root = None
 app = None
 
 entry_x, entry_y, entry_z = None, None, None
 slider_iteration = None
+sensibility_fractal_power_julia_c_frame, fractal_power_frame, fractal_c_frame = None, None, None
 
 
 def screen_size_selected_event(event):
@@ -44,6 +46,7 @@ def fractal_selected_event(event):
         fractal_settings.fractal_type = fractal_selected.name
         fractal_settings.save()
         app.add_element_to_queue("fractal")
+        update_fractal_type(fractal_selected.name)
 
 
 def sensibility_selected_event(event):
@@ -100,7 +103,7 @@ def update_fractal_power(event):
 
 def teleport_position_event():
     app.fractal_manager.center = [float(entry_x.get()), float(entry_y.get())]
-    app.fractal_manager.zoom = float(entry_z.get())
+    app.fractal_manager.zoom = max(0.001, float(entry_z.get()))
     app.add_element_to_queue("update_fractal")
 
 
@@ -114,6 +117,42 @@ def update_iteration(fractal_type):
     slider_iteration.config(from_=fractal_type.iteration_min, to=fractal_type.iteration_max)
 
 
+def update_fractal_type(fractal_name):
+    if sensibility_fractal_power_julia_c_frame is None:
+        return
+
+    global fractal_power_frame
+
+    from program.settings.settingsbase import fractal_settings
+
+    if fractal_name == FractalType.MANDELBROT.name:
+        fractal_power_frame = ttk.Frame(sensibility_fractal_power_julia_c_frame)
+
+        # Titre
+        label_power = tk.Label(fractal_power_frame, text="Puissance de la Fractale")
+        label_power.pack()
+
+        # Slider
+        fractal_power_slider = tk.Scale(fractal_power_frame, from_=2, to=50, resolution=1, orient=tk.HORIZONTAL,
+                                        length=150)
+        fractal_power_slider.pack()
+
+        # Ajout d'un gestionnaire d'événement pour détecter le relâchement du curseur du slider
+        fractal_power_slider.bind("<ButtonRelease-3>", update_fractal_power)
+        fractal_power_slider.bind("<ButtonRelease-1>", update_fractal_power)
+
+        fractal_power_frame.grid(row=0, column=1, sticky=tk.W, padx=5)
+
+        fractal_power_slider.set(fractal_settings.fractal_power)
+    else:
+        fractal_power_frame.destroy()
+
+    if fractal_name == FractalType.JULIA.name:
+        pass
+    else:
+        pass
+
+
 def kill_thread():
     global root
     if root is not None:
@@ -124,7 +163,8 @@ def kill_thread():
 def run(app_):
     from program.settings.settingsbase import screen_settings, fractal_settings
 
-    global root, app, entry_x, entry_y, entry_z, slider_iteration
+    global root, app, entry_x, entry_y, entry_z, slider_iteration, sensibility_fractal_power_julia_c_frame,\
+        fractal_power_frame, fractal_c_frame
     app = app_
 
     def update_position_entries():
@@ -145,7 +185,8 @@ def run(app_):
         slider_iteration.config(from_=fractal_type.iteration_min, to=fractal_type.iteration_max)
         slider_iteration.set(fractal_settings.iteration)
 
-        fractal_power_slider.set(fractal_settings.fractal_power)
+        if app.fractal_manager.get_fractal_type() == FractalType.MANDELBROT:
+            fractal_power_slider.set(fractal_settings.fractal_power)
 
     def reset_settings():
         screen_settings.reset_settings()
@@ -296,11 +337,11 @@ def run(app_):
 
     # Cadre pour le slider de sensibilité et fractal power
 
-    sensibility_fractal_power_frame = ttk.Frame(options_frame)
+    sensibility_fractal_power_julia_c_frame = ttk.Frame(options_frame)
 
     # Cadre pour le slider de sensibilité
 
-    sensibility_frame = ttk.Frame(sensibility_fractal_power_frame)
+    sensibility_frame = ttk.Frame(sensibility_fractal_power_julia_c_frame)
 
     # Titre
     label = tk.Label(sensibility_frame, text="Sensibilité")
@@ -317,24 +358,35 @@ def run(app_):
     sensibility_frame.grid(row=0, column=0, sticky=tk.W, padx=5)
 
     # Cadre pour le slider de fractal power
+    fractal_type = app.fractal_manager.get_fractal_type()
+    
+    if fractal_type == FractalType.MANDELBROT:
+        fractal_power_frame = ttk.Frame(sensibility_fractal_power_julia_c_frame)
 
-    fractal_power_frame = ttk.Frame(sensibility_fractal_power_frame)
+        # Titre
+        label_power = tk.Label(fractal_power_frame, text="Puissance de la Fractale")
+        label_power.pack()
 
-    # Titre
-    label = tk.Label(fractal_power_frame, text="Puissance de la Fractale")
-    label.pack()
+        # Slider
+        fractal_power_slider = tk.Scale(fractal_power_frame, from_=2, to=50, resolution=1, orient=tk.HORIZONTAL,
+                                        length=150)
+        fractal_power_slider.pack()
 
-    # Slider
-    fractal_power_slider = tk.Scale(fractal_power_frame, from_=2, to=50, resolution=1, orient=tk.HORIZONTAL, length=150)
-    fractal_power_slider.pack()
+        # Ajout d'un gestionnaire d'événement pour détecter le relâchement du curseur du slider
+        fractal_power_slider.bind("<ButtonRelease-3>", update_fractal_power)
+        fractal_power_slider.bind("<ButtonRelease-1>", update_fractal_power)
 
-    # Ajout d'un gestionnaire d'événement pour détecter le relâchement du curseur du slider
-    fractal_power_slider.bind("<ButtonRelease-3>", update_fractal_power)
-    fractal_power_slider.bind("<ButtonRelease-1>", update_fractal_power)
+        fractal_power_frame.grid(row=0, column=1, sticky=tk.W, padx=5)
+        
+    elif fractal_type == FractalType.JULIA:
 
-    fractal_power_frame.grid(row=0, column=1, sticky=tk.W, padx=5)
+        fractal_c_frame = ttk.Frame(sensibility_fractal_power_julia_c_frame)
 
-    sensibility_fractal_power_frame.pack()
+        # Titre
+        label_c = tk.Label(fractal_c_frame, text="Valeur donnée de C")
+        label_c.pack()
+
+    sensibility_fractal_power_julia_c_frame.pack()
 
     # Bouton pour réinitialiser les paramètres
     reset_button = ttk.Button(options_frame, text="Réinitialisation des Paramètres", command=reset_settings)
@@ -415,3 +467,4 @@ def run(app_):
     root = None
     entry_x, entry_y, entry_z = None, None, None
     slider_iteration = None
+    sensibility_fractal_power_julia_c_frame, fractal_power_frame, fractal_c_frame = None, None, None
