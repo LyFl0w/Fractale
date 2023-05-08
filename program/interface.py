@@ -352,7 +352,7 @@ def run(app_):
     label.pack()
 
     # Slider
-    slider_generation_optimization = tk.Scale(downsampling_frame, from_=1, to=100, resolution=1, orient=tk.HORIZONTAL,
+    slider_generation_optimization = tk.Scale(downsampling_frame, from_=1, to=250, resolution=1, orient=tk.HORIZONTAL,
                                               length=150)
     slider_generation_optimization.pack()
 

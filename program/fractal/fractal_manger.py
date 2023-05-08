@@ -68,9 +68,9 @@ class FractalManager:
     def draw(self, screen):
         from program.settings.settingsbase import screen_settings
 
-        fractal_surface = self.__fractal.get_surface()
+        fractal_surface = self.__fractal.get_surface().convert_alpha()
 
-        fractal_surface = pygame.transform.scale(fractal_surface, screen_settings.get_native_size())
+        fractal_surface = pygame.transform.smoothscale(fractal_surface, screen_settings.get_native_size())
 
         screen.blit(fractal_surface, (0, 0))
 
