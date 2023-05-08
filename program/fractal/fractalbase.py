@@ -21,8 +21,8 @@ class FractalBase(ABC):
 
 
 class FractalType(Enum):
-    MANDELBROT = ("Mandelbrot", 1, 6, 170)
-    JULIA = ("Julia", 1, 6, 170)
+    MANDELBROT = ("Mandelbrot", 1, 6, 200)
+    JULIA = ("Julia", 1, 6, 200)
     SPONGE_CUBE = ("Sponge Cube", 150, 4, 5)
     SIERPINSKI = ("Triangle de Sierpiński", 150, 3, 8)
 
