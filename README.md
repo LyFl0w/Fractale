@@ -5,7 +5,7 @@
 
 ![fracteur](https://user-images.githubusercontent.com/91786781/234685748-74331527-fdaa-41e1-9723-ebc3b0bcbb21.png)
 
-Fracteur est une application de génération de fractales qui permet aux utilisateurs de créer et de visualiser une grande variété de fractales créer par [@LyFlow](https://github.com/LyFl0w) et [@Florely](https://github.com/Fl0rely).
+Fracteur est une application de génération de fractales. Pour ceux qui ne le savent pas, les Fractales sont des formes géométriques complexes qui peuvent être générées à partir de modèles mathématiques simples ou complex. La propriété des fractales est que si vous zoomez dans un motif vous le retrouverez tout le temps. Les fractales sont souvent utilisées dans l'art, les animations et les simulations pour créer des images étonnantes. Leur étude nous permettrait d'arriver à calculer l'air sous une courbe d'une fonction que l'on arriverait pas à modéliser. Avec cela on pourrait trouver des patologies caridaque d'un coureur, ou trouver des copies fidèles d'oeuvre d'art. Ainsi l'aplication Fracteur créer par [@LyFlow](https://github.com/LyFl0w) et [@Florely](https://github.com/Fl0rely) se porte comme une initiation dans le monde des Fractales en vous permettant de créer et de visualiser une grande variété de fractales.
 
 ## Comment ça marche 🛠️
 Fracteur est écrit en Python et utilise la bibliothèque graphique `Pygame`, `Tkinter`.
@@ -43,6 +43,7 @@ Voici un exemple de fractale générée avec Fracteur:
 
 ## Contribuer 🤝
 Les contributions sont les bienvenues! Si vous souhaitez contribuer à Fracteur, veuillez ouvrir une pull request.
+Plus d'information sur le [Wiki](https://github.com/LyFl0w/Fracteur/wiki).
 
 ## Licence 📜
 Fracteur est sous licence GNU GPLv3. Consultez le fichier `LICENSE.txt` pour plus d'informations.
