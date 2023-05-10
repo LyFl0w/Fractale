@@ -6,6 +6,9 @@
 from numba import jit
 
 
+# Fonction de puissance plus rapide que celle fournit par Python
+
+# Moins performant que la fonction Power2
 @jit(nopython=True)
 def power(number, n_power):
     if n_power == 0:
@@ -13,6 +16,7 @@ def power(number, n_power):
     return number * power(number, n_power - 1)
 
 
+# Plus performant que la fonction Power
 @jit(nopython=True)
 def power2(number, n_power):
     if n_power == 0:

@@ -8,6 +8,8 @@
 import os
 from os.path import join
 
+# Permet de récupérer le path dynamique de l'application Fracteur
+
 ABSOLUTE_DIR_PATH = os.path.abspath("")
 
 # SETTINGS
