@@ -1,6 +1,6 @@
 # Fracteur - Une application génératrice de fractales 🌟
 
-![version](https://img.shields.io/badge/version-1.1.3-blue.svg)
+![version](https://img.shields.io/badge/version-1.1.4-blue.svg)
 ![progress](https://img.shields.io/badge/Progress-90%25-green)
 
 ![fracteur](https://user-images.githubusercontent.com/91786781/234685748-74331527-fdaa-41e1-9723-ebc3b0bcbb21.png)
