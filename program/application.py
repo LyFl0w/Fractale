@@ -21,25 +21,32 @@ from program.utils import queue_update
 
 class App:
     def __init__(self):
+        # Création / Chargement des paramètres de l'utilisateur
         ScreenSettings()
         FractalSettings()
 
         from program.settings.settingsbase import screen_settings
 
+        # Initialisation des paramètres PyGame
         self.screen = pygame.display.set_mode(screen_settings.get_native_size())
         self.clock = pygame.time.Clock()
 
+        # Initiliasation des variables permettant de manipuler l'application côté PyGame
         self.running = False
         self.draw_cursor = False
         self.moving = False
         self.scrolling = False
 
-        self.__queue_update = queue_update.QueueUpdate(self)
-
-        self.fractal_manager = FractalManager(zoom=0.5)
-
+        # Initialisation de la variable permettant de géré matplotlib
         self.matplotlib_running = False
 
+        # Initilisation de la Queue permettant de mettre à jour les paramètres PyGame depuis un autre thread
+        self.__queue_update = queue_update.QueueUpdate(self)
+
+        # Initialisation de la class Manager de la Fractale (permet de manipuler correctement la Fractale)
+        self.fractal_manager = FractalManager(zoom=0.5)
+
+    # Fonction permettant de zoom à l'aide du curseur
     def zoom_at_cursor(self, zoom_factor):
         from program.settings.settingsbase import screen_settings
 
@@ -51,11 +58,13 @@ class App:
                                screen_settings.filter[::-1] if screen_settings.display_filter else (255, 255, 255),
                                (screen_settings.get_native_size()[0] / 2, screen_settings.get_native_size()[1] / 2), 10)
 
+        # Mise à jour des coordonnées dans l'interface TKinter
         if interface.entry_z is not None:
             interface.entry_z.config(textvariable=tk.DoubleVar(value=round(self.fractal_manager.zoom, 3)))
 
         pygame.display.update()
 
+    # Fonction permettant de bouger la Fractale à l'aide d'un clique gauche + déplacement de souris
     def handle_mouse_movement(self):
         from program.settings.settingsbase import screen_settings, fractal_settings
 
@@ -81,29 +90,38 @@ class App:
 
             pygame.display.update()
 
+    # Fonction lancant le thread Principale pour PyGame
     def run(self):
         from program.settings.settingsbase import screen_settings
 
         if self.running:
             raise Exception("The application is already launched")
 
+        # Initialisation de la boucle Principale pour PyGame
         self.running = True
 
+        # Affiche la Fractale
         self.draw_fractal()
         pygame.display.update()
 
         while self.running:
+            # Cherche si il y a du code à exécuter envoyé depuis le thread TKinter pour l'executer dans le thread PyGame
             self.__queue_update.execute()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    # Stop la boucle principale du thread PyGame quand on veut ferme l'application
                     self.running = False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 4:
+                        # Zoom dans la Fractale
                         self.zoom_at_cursor(1.1)
+
                     elif event.button == 5:
+                        # Dezoom dans la Fractale
                         self.zoom_at_cursor(0.9)
+
                 elif self.scrolling:
                     self.set_not_scrolling()
 
@@ -115,12 +133,15 @@ class App:
                         if interface.root is None:
                             # Démarrer le thread Tkinter uniquement s'il n'est pas déjà en cours d'exécution
                             threading.Thread(target=interface.run, args=(self,)).start()
+
                     if event.key == pygame.K_c and not self.matplotlib_running:
+                        # Démarrer le thread Matplotlib uniquement s'il n'est pas déjà en cours d'exécution
                         threading.Thread(target=cube3d.run, args=(self,)).start()
+
                     if event.key == pygame.K_b and not self.matplotlib_running:
+                        # Démarrer le thread Matplotlib uniquement s'il n'est pas déjà en cours d'exécution
                         threading.Thread(target=pyramide3d.run, args=(self,)).start()
 
-            # remove cursor
             if not pygame.mouse.get_pressed()[0]:
 
                 self.set_not_moving()
@@ -129,6 +150,8 @@ class App:
                     self.draw_fractal()
                     pygame.display.update()
             else:
+                # Mise à jour des coordonnées dans l'interface TKinter
+
                 if interface.entry_x is not None:
                     interface.entry_x.config(textvariable=tk.DoubleVar(value=self.fractal_manager.center[0]))
 
@@ -137,9 +160,11 @@ class App:
 
             self.clock.tick(screen_settings.fps)
 
+        # Détruit le thread de l'interface TKinter (donc Ferme TKinter)
         if interface.root is not None:
             interface.kill_thread()
 
+        # Ferme PyGame
         pygame.quit()
 
     def add_element_to_queue(self, key):
@@ -148,6 +173,7 @@ class App:
     def draw_fractal(self):
         self.fractal_manager.draw(self.screen)
 
+    # Fonction d'optimisation lors des déplacements de la Fractale (baisse de la qualité de rendu)
     def set_moving(self):
         if not self.moving:
             self.moving = True

@@ -12,7 +12,8 @@ from pathlib import Path
 from program.utils.path import SETTINGS_PATH
 
 
-def writeJson(obj, path: str, remove_variable=()):
+# Fonction de référance permettant d'écrire facilement des Objets en Json
+def write_json(obj, path: str, remove_variable=()):
     # Transform object to dict
     if not isinstance(obj, dict):
         obj = vars(obj)
@@ -37,7 +38,8 @@ def writeJson(obj, path: str, remove_variable=()):
         outfile.write(json_object)
 
 
-def readJson(json_file_path: str) -> dict:
+# Fonction de référance permettant de lire facilement des Objets en format Json
+def read_json(json_file_path: str) -> dict:
     # Read JSON file
     data_str = open(os.path.join(SETTINGS_PATH, json_file_path))
     data = json.loads(data_str.read())
