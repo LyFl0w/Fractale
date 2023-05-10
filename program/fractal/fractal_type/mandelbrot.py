@@ -3,32 +3,31 @@
 #  This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
 #  This is free software, and you are welcome to redistribute it under certain conditions; type `show c' for details.
 #
-
-from numba import jit
+import numba
+from numba import jit, njit
 import numpy as np
 import pygame
 from pygame.surface import Surface
 from program.fractal.fractalbase import FractalBase
-from program.utils import math
 
 
-@jit(nopython=True)
+@njit(fastmath=True, cache=True)
 def __mandelbrot(c, maxiter, power):
     z = c
     for n in range(maxiter):
         if z.real * z.real + z.imag * z.imag > 4.0:
             return n
-        z = math.power2(z, power) + c
+        z = z ** power + c
     return 0
 
 
-@jit(nopython=True)
+@njit(fastmath=True, parallel=True, cache=True)
 def mandelbrot_set(xmin, xmax, ymin, ymax, width, height, maxiter, power):
     r1 = np.linspace(xmin, xmax, width)
     r2 = np.linspace(ymin, ymax, height)
     n3 = np.empty((width, height))
-    for i in range(width):
-        for j in range(height):
+    for i in numba.prange(width):
+        for j in numba.prange(height):
             n3[i, j] = __mandelbrot(r1[i] + 1j * r2[j], maxiter, power)
     return n3
 
