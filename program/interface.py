@@ -181,6 +181,7 @@ def update_fractal_type(fractal_name):
         # Slider
         fractal_power_slider = tk.Scale(fractal_power_frame, from_=2, to=50, resolution=1, orient=tk.HORIZONTAL,
                                         length=150)
+        fractal_power_slider.set(fractal_settings.fractal_power)
         fractal_power_slider.pack()
 
         # Ajout d'un gestionnaire d'événement pour détecter le relâchement du curseur du slider
@@ -265,6 +266,9 @@ def run(app_):
         fractal_type = fractalbase.get_fractal_by_name(fractal_settings.fractal_type)
         slider_iteration.config(from_=fractal_type.iteration_min, to=fractal_type.iteration_max)
         slider_iteration.set(fractal_settings.iteration)
+
+        if fractal_power_slider is not None:
+            fractal_power_slider.set(fractal_settings.fractal_power)
 
     def reset_settings():
         fractal_settings.reset_settings()

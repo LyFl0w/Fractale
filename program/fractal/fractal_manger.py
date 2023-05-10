@@ -2,8 +2,7 @@
 #  Fracteur Copyright (c) 2023 LyFlow and Florely
 #  This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
 #  This is free software, and you are welcome to redistribute it under certain conditions; type `show c' for details.
-#                                                                               
-
+#
 
 import pygame
 
@@ -84,7 +83,7 @@ class FractalManager:
         from program.settings.settingsbase import screen_settings
 
         # Récupère la Surface de la Fractale
-        fractal_surface = self.__fractal.get_surface().convert_alpha()
+        fractal_surface = self.__fractal.get_surface().convert()
 
         # Met de l'antialiasing si la qualité de la Fractale est suppérieur à 100%
         if screen_settings.get_generation_size_optimization() > 1:
