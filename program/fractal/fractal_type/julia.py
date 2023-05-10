@@ -3,15 +3,16 @@
 #  This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
 #  This is free software, and you are welcome to redistribute it under certain conditions; type `show c' for details.
 #
+import numba
 import numpy as np
 import pygame
-from numba import jit
+from numba import njit
 from pygame import Surface
 
 from program.fractal.fractalbase import FractalBase
 
 
-@jit(nopython=True)
+@njit(fastmath=True, cache=True)
 def julia(cx, cy, zx, zy, maxiter):
     for n in range(maxiter):
         zx2, zy2 = zx * zx, zy * zy
@@ -21,13 +22,13 @@ def julia(cx, cy, zx, zy, maxiter):
     return 0
 
 
-@jit(nopython=True)
+@njit(fastmath=True, parallel=True, cache=True)
 def julia_set(xmin, xmax, ymin, ymax, width, height, maxiter, cx, cy):
     r1 = np.linspace(xmin, xmax, width)
     r2 = np.linspace(ymin, ymax, height)
     n3 = np.empty((width, height))
-    for i in range(width):
-        for j in range(height):
+    for i in numba.prange(width):
+        for j in numba.prange(height):
             n3[i, j] = julia(cx, cy, r1[i], r2[j], maxiter)
     return n3
 

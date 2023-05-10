@@ -159,6 +159,7 @@ class App:
                     interface.entry_y.config(textvariable=tk.DoubleVar(value=self.fractal_manager.center[1]))
 
             self.clock.tick(screen_settings.fps)
+            pygame.display.set_caption(f'FPS: {self.clock.get_fps()}')
 
         # Détruit le thread de l'interface TKinter (donc Ferme TKinter)
         if interface.root is not None:

@@ -8,13 +8,13 @@
 import math
 
 import pygame
-from numba import jit
+from numba import jit, njit
 from pygame.surface import Surface
 
 from program.fractal.fractalbase import FractalBase
 
 
-@jit(nopython=True)
+@njit(fastmath=True, cache=True)
 def position_cube(center_x, center_y, cube_x, cube_y, width):
     if center_x - cube_x >= width / 2:
         x = 1
