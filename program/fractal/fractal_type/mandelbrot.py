@@ -2,7 +2,7 @@
 #  Fracteur Copyright (c) 2023 LyFlow and Florely
 #  This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
 #  This is free software, and you are welcome to redistribute it under certain conditions; type `show c' for details.
-#                                                                               
+#
 
 from numba import jit
 import numpy as np
@@ -40,6 +40,7 @@ class Mandelbrot(FractalBase):
 
     def get_surface(self) -> Surface:
         from program.settings.settingsbase import fractal_settings
+
         xmin, xmax = self.fractal_manager.center[0] - 1 / self.fractal_manager.zoom, self.fractal_manager.center[
             0] + 1 / self.fractal_manager.zoom
 
