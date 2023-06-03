@@ -1,6 +1,6 @@
 # Fracteur - Une application génératrice de fractales 🌟
 
-![version](https://img.shields.io/badge/version-1.1.4-blue.svg)
+![version](https://img.shields.io/badge/version-1.1.5-blue.svg)
 ![progress](https://img.shields.io/badge/Progress-90%25-green)
 
 ![fracteur](https://user-images.githubusercontent.com/91786781/234685748-74331527-fdaa-41e1-9723-ebc3b0bcbb21.png)
@@ -15,7 +15,7 @@ Pygame est utilisé pour afficher les fractales et TKinter permet aux utilisateu
 (Vous pouvez ignorer toutes les étapes d'installation si vous installez l'application Fracteur directement en format .exe depuis l'onglet release de GitHub, il vous suffira juste d'extraire le fichier .rar ou .zip)
 
 1. Cloner ce dépôt avec `git clone https://github.com/LyFl0w/Fractaeur.git` (sinon télécharger le zip du dépôt) 🧬
-2. Assurez-vous que Python 3 est installé sur votre ordinateur 🐍
+2. Assurez-vous que Python 3.11 est installé sur votre ordinateur 🐍
 3. Installez les dépendances avec `pip install -r requirements.txt` 📦
 
 ## Utilisation 💡
@@ -28,10 +28,10 @@ Pygame est utilisé pour afficher les fractales et TKinter permet aux utilisateu
 5. Pour visulasier les prototypes de fractales 3D vous pouvez appuyer sur la touche ©️  (pour le sponge cube) et 🅱️ (pour le triangle de sierpinski).
 
 ## Prérequis 🔥
-- python 3.10
-- pygame 2.3.0
-- numpy 1.24.2
-- matplotlib 3.5.1
+- python 3.11
+- pygame 2.4.0
+- numpy 1.24.3
+- matplotlib 3.7.1
 - numba 0.57.0
 
 ## Exemple de fractale 🌅
